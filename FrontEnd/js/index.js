@@ -1,12 +1,15 @@
-import { getWorksAndStore, getStoredWorks } from './api.js';
+import { getWorksAndReturn, getStoredWorks, getCategoriesAndReturn, getStoredCategories} from './api.js';
 
-let currentWorksIndex = 0;
+
 
 async function fetchAndDisplayWorks() {
-    await getWorksAndStore();
+    await getWorksAndReturn();
     
-    const works = getStoredWorks(); 
+    const works = await getStoredWorks(); 
     const galleryEl = document.querySelector('.gallery');
+    galleryEl.innerHTML = '';
+    
+    // const filteredWorks = works
     for ( const work of works) {
     const figure = document.createElement('figure');
     figure.setAttribute('id',`work-${work.id}`);
@@ -19,35 +22,25 @@ async function fetchAndDisplayWorks() {
     figure.appendChild(img);
     figure.appendChild(figcaption);
     galleryEl.appendChild(figure);
-    } 
+}
 }
 
+// async function updateByCategories() {
+//     const categories = await getCategoriesAndReturn();
+//     const storedCategories = await getStoredCategories();
+
+//     if (JSON.stringify(storedCategories) !== JSON.stringify(categories){
+//         currentCategories = categories; 
+//         await fetchAndDisplayWorks();
+//     }
+// }
+
+// async function linkFiltersToCategories() {
+//     await getCategoriesAndReturn();
+
+//     const categories = await getStoredCategories();
+//     let allWorks = document.getElementById("buttonAll")
+//     allWorks.addEventListener("click", function()
+// {})
+// }
 fetchAndDisplayWorks()
-/* async function fetchAndDisplayWorks() {
-    // waits fot the promise to finish
-    await getWorksAndStore(); 
-    const works = getStoredWorks();
-  
-    const galleryEl = document.querySelector('.gallery')
-    for (let i = 0; i < works.length; i++) {
-        const work = works[i];
-    
-        // creates figure + retrieves and add work id 
-        const figure = document.createElement('figure');
-   /*      figure.setAttribute('id',`work-${work.id}`) */
-        // creates img + retrieves and add src + alt 
-/*         const img = document.createElement('img');
-        img.src = "/assets/images";
-        img.alt = blalba
-        // creates figcaption + retrieves and add title
-        const figcaption = document.createElement('figcaption');
-        figcaption.textContent = Text;
-
-        figure.appendChild(img);
-        figure.appendChild(figcaption)
-
-        galleryEl.appendChild(figure) */
-/* /* } */
-/* } */ 
-/* /* getWorksAndStore();
-getStoredWorks(); */
