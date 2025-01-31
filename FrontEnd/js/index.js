@@ -1,15 +1,22 @@
-import { getWorksAndReturn, getStoredWorks, getCategoriesAndReturn, getStoredCategories} from './api.js';
+import { getWorksAndReturn, getCategoriesAndReturn} from './api.js';
+
+const galleryEl = document.querySelector('.gallery');
+const filtersEl=document.querySelector('.filters');
+const showAllEl=document.getElementById('showAll')
+let currentCategoryId = null;
 
 
+async function filterWorksByCategory(categoryId) {
+    const works = await getWorksAndReturn();
+    const filteredWorks = works.filter(work => work.category.id === categoryId); 
+    fetchAndDisplayWorks(filteredWorks);
+}
 
-async function fetchAndDisplayWorks() {
-    await getWorksAndReturn();
-    
-    const works = await getStoredWorks(); 
-    const galleryEl = document.querySelector('.gallery');
+
+async function fetchAndDisplayWorks(filteredWorks) {
     galleryEl.innerHTML = '';
-    
-    for ( const work of works) {
+
+    for ( const work of filteredWorks) {
     const figure = document.createElement('figure');
     figure.setAttribute('id',`work-${work.id}`);
     const img = document.createElement('img');
@@ -24,38 +31,38 @@ async function fetchAndDisplayWorks() {
 }
 }
 
-async function filterWorksByCategory(categoryId) {
-    const works = await getStoredWorks();
 
-    const filteredWorks = works.filter(work => work.category.id === categoryId); 
-    fetchAndDisplayWorks(filteredWorks);
-}
+async function fetchAndDisplayCategories() {
+    const categories = await getCategoriesAndReturn();
 
-
-async function linkFiltersToCategories() {
-    await getCategoriesAndReturn();
-    const categories = await getStoredCategories();
-
-    const allWorks = document.getElementById("buttonAll");
-    allWorks.addEventListener("click", () => filterWorksByCategory('all'));
-    categories.forEach(category => {
-        const filterButton = document.getElementById(`${category.id}`);
-        filterButton.addEventListener("click", () => filterWorksByCategory(category.id))
-    } )
-    // const onlyObjects = document.getElementById("buttonObjects");
-    // const onlyAppartments = document.getElementById("buttonAppartements");
-    // const onlyHotels = document.getElementById("buttonHotels");
-
-    // onlyObjects.addEventListener("click", () => filterWorksByCategory(1));
-    // onlyAppartments.addEventListener("click", () => filterWorksByCategory(2));
-    // onlyHotels.addEventListener("click", () => filterWorksByCategory(3));
-    
+    for (const category of categories) {
+        const button = document.createElement('button');
+        button.setAttribute('id',`category-${category.id}`)
+        button.setAttribute('type','button');
+        button.textContent = category.name
+        
+        button.addEventListener('click', () => {
+       if (category.id !== currentCategoryId){
+        currentCategoryId = `${category.id}`;
+        filterWorksByCategory(category.id)
+       }
+        })
+        filtersEl.appendChild(button);
+    }
+        if (showAllEl) {
+            showAllEl.addEventListener('click', async () => {
+                const allWorks = await getWorksAndReturn();
+                fetchAndDisplayWorks(allWorks);
+                
+            })
+        }
 }
 
 async function init() {
-await getWorksAndReturn();
-await fetchAndDisplayWorks();
-linkFiltersToCategories();
+const allWorks = await getWorksAndReturn();
+    fetchAndDisplayWorks(allWorks);
+await fetchAndDisplayCategories();
+
 }
 
 init();
