@@ -9,7 +9,6 @@ async function fetchAndDisplayWorks() {
     const galleryEl = document.querySelector('.gallery');
     galleryEl.innerHTML = '';
     
-    // const filteredWorks = works
     for ( const work of works) {
     const figure = document.createElement('figure');
     figure.setAttribute('id',`work-${work.id}`);
@@ -25,22 +24,38 @@ async function fetchAndDisplayWorks() {
 }
 }
 
-// async function updateByCategories() {
-//     const categories = await getCategoriesAndReturn();
-//     const storedCategories = await getStoredCategories();
+async function filterWorksByCategory(categoryId) {
+    const works = await getStoredWorks();
 
-//     if (JSON.stringify(storedCategories) !== JSON.stringify(categories){
-//         currentCategories = categories; 
-//         await fetchAndDisplayWorks();
-//     }
-// }
+    const filteredWorks = works.filter(work => work.category.id === categoryId); 
+    fetchAndDisplayWorks(filteredWorks);
+}
 
-// async function linkFiltersToCategories() {
-//     await getCategoriesAndReturn();
 
-//     const categories = await getStoredCategories();
-//     let allWorks = document.getElementById("buttonAll")
-//     allWorks.addEventListener("click", function()
-// {})
-// }
-fetchAndDisplayWorks()
+async function linkFiltersToCategories() {
+    await getCategoriesAndReturn();
+    const categories = await getStoredCategories();
+
+    const allWorks = document.getElementById("buttonAll");
+    allWorks.addEventListener("click", () => filterWorksByCategory('all'));
+    categories.forEach(category => {
+        const filterButton = document.getElementById(`${category.id}`);
+        filterButton.addEventListener("click", () => filterWorksByCategory(category.id))
+    } )
+    // const onlyObjects = document.getElementById("buttonObjects");
+    // const onlyAppartments = document.getElementById("buttonAppartements");
+    // const onlyHotels = document.getElementById("buttonHotels");
+
+    // onlyObjects.addEventListener("click", () => filterWorksByCategory(1));
+    // onlyAppartments.addEventListener("click", () => filterWorksByCategory(2));
+    // onlyHotels.addEventListener("click", () => filterWorksByCategory(3));
+    
+}
+
+async function init() {
+await getWorksAndReturn();
+await fetchAndDisplayWorks();
+linkFiltersToCategories();
+}
+
+init();
