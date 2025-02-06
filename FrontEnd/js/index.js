@@ -2,9 +2,17 @@ import { getWorksAndReturn, getCategoriesAndReturn} from './api.js';
 
 const galleryEl = document.querySelector('.gallery');
 const filtersEl=document.querySelector('.filters');
-const showAllEl=document.getElementById('showAll')
+const showAllEl=document.getElementById('showAll');
+const connectEl=document.getElementById('connect');
 let currentCategoryId = null;
 
+function ifCurrent() {
+document.querySelectorAll('a').forEach(link => {
+    if (link.href === window.location.href) {
+        link.classList.add('current');
+    }
+})
+}
 
 async function filterWorksByCategory(categoryId) {
     const works = await getWorksAndReturn();
@@ -58,10 +66,36 @@ async function fetchAndDisplayCategories() {
         }
 }
 
+async function submitLogIn() {
+    connectEl.addEventListener('submit', event => {
+event.preventDefault();
+const formData = new FormData(formEl);
+const data = Object.fromEntries(formData.entries())
+
+fetch('http://localhost:5678/api/users/login', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+})
+.then(json => {
+    if (json.status === 'success') {
+        window.location.href = '/index';
+    } else {
+        console.error('login failed');
+    }
+
+});
+});
+};
+
 async function init() {
+    ifCurrent();
 const allWorks = await getWorksAndReturn();
     fetchAndDisplayWorks(allWorks);
 await fetchAndDisplayCategories();
+submitLogIn();
 
 }
 
