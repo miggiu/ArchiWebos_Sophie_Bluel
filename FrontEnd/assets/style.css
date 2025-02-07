@@ -238,6 +238,10 @@ li a {
 	color: white;
 }
 
+.not-displayed {
+	display: none;
+}
+
 .gallery {
 	width: 100%;
 	display: grid;
