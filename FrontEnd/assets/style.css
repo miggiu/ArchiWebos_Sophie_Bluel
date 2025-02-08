@@ -184,6 +184,9 @@ li a {
 	color: black;
 }
 
+#logout {
+	cursor:pointer;
+}
 /* li:hover {
 	color: #b1663c;
 } */
@@ -191,6 +194,30 @@ li a {
 .current { 
 	font-weight: bold;
 }
+
+.logged-banner {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: black;
+	color: black;
+	width: 100%;
+	height: 50px;
+	margin: 0;
+}
+
+#loggedBanner p {
+	color: white;
+	display: flex;
+	font-family: "Work Sans";
+	font-weight: 400;
+	font-size: 16px;
+}
+
+#loggedBanner p i {
+	color:white;
+	padding-right: 12px;
+} 
 
 #introduction {
 	display: flex;
@@ -218,7 +245,24 @@ li a {
 #portfolio h2 {
 	text-align: center;
 	margin-bottom: 1em;
+	margin-top: 140px;
+	display:flex;
+	justify-content: center;
 }
+
+#projets p {
+	font-family: "Work Sans";
+	font-weight: 400;
+	font-size: 14px;
+	color: black;
+	align-content: center;
+	cursor:pointer;
+}
+
+#projets p i{
+	margin: 0 10px 0 30px;
+}
+
 .filters {
 	display: flex;
 	justify-content: center;
@@ -262,6 +306,15 @@ li a {
 
 #contact, #login > * {
 	text-align: center;
+}
+
+#login #errorMsg {
+	font-family: "Work Sans";
+	color: red;
+	font-size: 18px;
+	font-weight: bold;
+	text-decoration: none;
+	margin-bottom: 10px;
 }
 
 #login p {
@@ -331,6 +384,10 @@ li a {
 	width: 45%;
 	text-align: center;
 	border-radius: 60px;
+}
+
+#login input[type="submit"]:hover{
+	background-color: #0E2F28;
 }
 
 footer nav ul {
