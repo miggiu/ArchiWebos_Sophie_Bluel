@@ -2,6 +2,20 @@ import { ifCurrent } from "./shared.js";
 
 const connectEl = document.getElementById("connect");
 const errorEl = document.getElementById("errorMsg");
+const inputPassword = document.getElementById("password");
+const passwordVisible = document.getElementById("showPassword")
+
+document.addEventListener('DOMContentLoaded', function() {
+	function checkPasswordInput () {
+		if (inputPassword.value.length > 0) {
+			passwordVisible.style.display = "flex";
+		} else {
+			passwordVisible.style.display = "none";
+		}
+	}
+	inputPassword.addEventListener('input', checkPasswordInput);
+	checkPasswordInput();
+})
 
 export async function submitLogIn() {
 	connectEl.addEventListener("submit", (event) => {
@@ -32,9 +46,34 @@ export async function submitLogIn() {
 	});
 }
 
+function hidePassword() {
+	
+		if (inputPassword.type === "password") {
+		inputPassword.type = "text";
+	} else {
+		inputPassword.type = "password";
+		passwordVisible.style.display = "none";
+	}
+	}
+	
+
+
+async function showPassword() {
+	passwordVisible.addEventListener('click', () => {
+		var x = document.getElementById("password");
+		if (x.type === "text") {
+			x.type ="password";
+		} else {
+			x.type ="text";
+		}
+	})
+}
+
 async function init() {
 	ifCurrent();
 	await submitLogIn();
+	hidePassword();
+	showPassword();
 }
 
 init();

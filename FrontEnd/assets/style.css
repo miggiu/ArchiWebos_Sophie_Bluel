@@ -133,6 +133,7 @@ body {
 	margin: auto;
 	font-family: "Work Sans";
 	font-size: 14px;
+	overflow-x: hidden;
 }
 header {
 	display: flex;
@@ -389,6 +390,22 @@ li a {
 
 #login input[type="submit"]:hover{
 	background-color: #0E2F28;
+}
+
+.fa-eye {
+	display: flex;
+	justify-content: end;
+	position: relative;
+	width: 20px;
+	top: -32px;
+	left: 520px;
+	color: #1d6154;
+	opacity: 75%;
+
+}
+
+.fa-eye:hover {
+	color:#0E2F28
 }
 
 footer nav ul {
