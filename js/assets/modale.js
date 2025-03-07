@@ -1,51 +1,60 @@
-let modal = null;
-/* const focusableSelector = "button, a, input, textarea" */
-/* to modify with correct elements */
-/* let focusables = []; */
-export const openModal = function (e) {
-	e.preventDefault();
-	const target = document.getElementById(e.target.getElementById("modal-1"));
-	target.style.display = null;
-	target.removeAttribute("aria-hidden");
-	target.setAttribute("aria-modal", "true");
-	modal = target;
-	modal.addEventListener("click", closeModal);
-	modal.querySelector(".js-modal-close").addEventListener("click", closeModal);
-	modal.querySelector(".js-modal-stop").addEventListener("click", closeModal);
-};
-export const closeModal = function (e) {
-	if (modal == null) return;
-	e.preventDefault();
-	modal.style.display = "none";
-	modal.setAttribute("aria-hidden", "true");
-	modal.removeAttribute("aria-modal");
-	modal.removeEventListener("click");
-	modal
-		.querySelector(".js-modal-close")
-		.removeEventListener("click", closeModal);
-	modal
-		.querySelector(".js-modal-stop")
-		.removeEventListener("click", stopPropagation);
-	modal = null;
-};
+/* import { getWorksAndReturn } from "./api";
 
-document.querySelectorAll(".js-modal").forEach((a) => {
-	a.addEventListener("click", openModal);
-});
+const workSectionEl = document.getElementById("api-works"); */
+const modalOnClick = document.getElementById("modifyProjects");
+console.log("modifyProjects element:", modalOnClick);
 
-const stopPropagation = function (e) {
-	e.stopPropagation();
-};
+export async function showModal1() {
+	document.addEventListener("DOMContentLoaded", () => {
+		const token = localStorage.getItem("user_token");
+		if (token) {
+			modalOnClick.addEventListener("click", () => {
+				console.log("found:", modalOnClick);
+				const modalAside = document.getElementById("modal-1");
+				if (modalAside) {
+					modalAside.setAttribute("aria-hidden", "false");
+					modalAside.setAttribute("aria-modal", "true");
+					modalAside.classList.remove("modalInvisible");
+					modalAside.classList.add("modalVisible");
+				}
+			});
+		} else {
+			console.log("user is not logged in");
+		}
+	});
+}
 
-const focusInModal = function (e) {
-	e.preventDefault();
-};
+/* async function displayWorksInModal(Works) {
+	workSectionEl.innerHTML = "";
 
-window.addEventListener("keydown", function (e) {
-	if (e.key === "Escape" || e.key === "Esc") {
-		closeModal(e);
+	for (const work of Works) {
+		const workData = await getWorksAndReturn(work.id);
+		const figure = document.createElement("figure");
+		figure.setAttribute("id", `work-${workData.id}`);
+		const img = document.createElement("img");
+		img.src = workData.imageUrl;
+		img.alt = workData.title;
+		const figcaption = document.createElement("figcaption");
+		figcaption.textContent = workData.title;
+
+		figure.appendChild(img);
+		figure.appendChild(figcaption);
+		workSectionEl.appendChild(figure);
 	}
-	if (e.key === "Tab" && modal !== null) {
-		focusInModal(e);
+} */
+export async function closeModal() {
+	const closeModalButton = document.getElementById("js-modal-close");
+	if (closeModalButton) {
+		closeModalButton.addEventListener("click", () => {
+			const modalAside = document.getElementById("modal-1");
+			if (modalAside) {
+				modalAside.classList.remove("modalVisible");
+				modalAside.classList.add("modalInvisible");
+				modalAside.setAttribute("aria-hidden", "true");
+				modalAside.setAttribute("aria-modal", "false");
+			}
+		});
 	}
-});
+}
+
+/* displayWorksInModal(); */

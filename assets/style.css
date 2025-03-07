@@ -253,16 +253,18 @@ li a {
 	justify-content: center;
 }
 
-#projets p {
+#projets button {
 	font-family: "Work Sans";
 	font-weight: 400;
 	font-size: 14px;
 	color: black;
 	align-content: center;
 	cursor:pointer;
+	border: none;
+	background-color: unset;
 }
 
-#projets p i{
+#modifyProjects  i{
 	margin: 0 10px 0 30px;
 }
 
@@ -435,7 +437,15 @@ footer nav ul {
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background-color: rgba(0,0,0,0.8);
+	background-color: rgba(0,0,0,0.7);
+}
+
+.modalVisible{
+	display: flex;
+}
+
+.modalInvisible{
+	display: none;
 }
 
 .modal-wrapper{
@@ -446,4 +456,26 @@ footer nav ul {
 	max-height: calc(100vh - 20px);
 	padding: 20px;
 	overflow: auto;
+}
+
+.close-modal-div {
+	display: flex;
+	justify-self: flex-end;
+}
+
+#js-modal-close{
+	all: unset;
+}
+
+#close-mark{
+	width: 24px;
+	height: 24px;
+}
+
+#modalTitle{
+	font-family: "Work Sans";
+	font-weight: 400;
+	font-size: 26px;
+	color: black;
+	align-items: center;
 }

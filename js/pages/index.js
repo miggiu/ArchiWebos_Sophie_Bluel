@@ -1,7 +1,7 @@
 import { getWorksAndReturn, getCategoriesAndReturn } from "../assets/api.js";
 import { ifCurrent } from "./shared.js";
 import { ifLoggedIn, logOut } from "./ifLogged.js";
-import { openModal, closeModal } from "../assets/modale.js";
+import { showModal1, closeModal } from "../assets/modale.js";
 
 const galleryEl = document.querySelector(".gallery");
 const filtersEl = document.querySelector(".filters");
@@ -64,9 +64,9 @@ async function init() {
 	fetchAndDisplayWorks(allWorks);
 	await fetchAndDisplayCategories();
 	await ifLoggedIn();
-	openModal();
-	closeModal();
+	await showModal1();
 	logOut();
+	await closeModal();
 }
 
 init();
