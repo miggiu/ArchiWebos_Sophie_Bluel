@@ -1,7 +1,11 @@
 import { getWorksAndReturn, getCategoriesAndReturn } from "../assets/api.js";
 import { ifCurrent } from "./shared.js";
-import { ifLoggedIn, logOut } from "./ifLogged.js";
-import { showModal1, closeModal } from "../assets/modale.js";
+import { getToken, modifyInterface, logOut } from "./ifLogged.js";
+import {
+	showModal1,
+	closeModal,
+	displayWorksInModal,
+} from "../assets/modale.js";
 
 const galleryEl = document.querySelector(".gallery");
 const filtersEl = document.querySelector(".filters");
@@ -63,10 +67,12 @@ async function init() {
 	const allWorks = await getWorksAndReturn();
 	fetchAndDisplayWorks(allWorks);
 	await fetchAndDisplayCategories();
-	await ifLoggedIn();
-	await showModal1();
+	getToken();
+	modifyInterface();
+	showModal1();
+	displayWorksInModal();
+	closeModal();
 	logOut();
-	await closeModal();
 }
 
 init();

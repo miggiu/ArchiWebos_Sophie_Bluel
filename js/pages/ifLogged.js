@@ -4,17 +4,21 @@ const logoutEl = document.getElementById("logout");
 const loggedBannerEl = document.getElementById("loggedBanner");
 const projetsEl = document.getElementById("projets");
 const sectionAside = document.getElementById("portfolio");
-export async function ifLoggedIn() {
-	const token = localStorage.getItem("user_token");
-	if (token) {
-		console.log("Token found:", token);
 
+export async function getToken() {
+	let token = localStorage.getItem("user_token");
+	console.log("Token found:", token);
+	return !!token;
+}
+
+export async function updatePage() {
+	const tokenFound = await getToken();
+	if (tokenFound) {
 		document.getElementById("showAll").className = "not-displayed";
 		document.getElementById("category-1").className = "not-displayed";
 		document.getElementById("category-2").className = "not-displayed";
 		document.getElementById("category-3").className = "not-displayed";
 		logoutEl.textContent = "logout";
-
 		loggedBannerEl.classList.add("logged-banner");
 		const editDisplay = document.createElement("p");
 		const editIconBanner = document.createElement("i");
@@ -26,6 +30,21 @@ export async function ifLoggedIn() {
 		const editIconProjets = document.createElement("i");
 		editIconProjets.classList.add("fa-regular", "fa-pen-to-square");
 		const projetsText = document.createTextNode("modifier");
+
+		editDisplay.appendChild(editIconBanner);
+		editDisplay.appendChild(pText);
+		loggedBannerEl.appendChild(editDisplay);
+		editTextProjets.appendChild(editIconProjets);
+		editTextProjets.appendChild(projetsText);
+
+		projetsEl.appendChild(editTextProjets);
+	} else {
+		console.log("no token found");
+	}
+}
+export async function createModalTemplate() {
+	const tokenFound = await getToken();
+	if (tokenFound) {
 		const modalAside = document.createElement("aside");
 		modalAside.setAttribute("id", "modal-1");
 		modalAside.classList.add("modalTemplate");
@@ -51,11 +70,6 @@ export async function ifLoggedIn() {
 		const workSection = document.createElement("section");
 		workSection.setAttribute("id", "api-works");
 
-		editDisplay.appendChild(editIconBanner);
-		editDisplay.appendChild(pText);
-		loggedBannerEl.appendChild(editDisplay);
-		editTextProjets.appendChild(editIconProjets);
-		editTextProjets.appendChild(projetsText);
 		sectionAside.insertAdjacentElement("afterend", modalAside);
 
 		modalAside.appendChild(modalDiv);
@@ -64,11 +78,14 @@ export async function ifLoggedIn() {
 		modalDiv.appendChild(modalTitle);
 		closeModalButton.appendChild(closeModalIcon);
 		modalDiv.appendChild(workSection);
-
-		projetsEl.appendChild(editTextProjets);
 	} else {
 		console.log("no token found");
 	}
+}
+
+export async function modifyInterface() {
+	updatePage();
+	createModalTemplate();
 }
 
 export function logOut() {

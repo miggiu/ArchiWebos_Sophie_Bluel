@@ -1,13 +1,21 @@
-/* import { getWorksAndReturn } from "./api";
+import { getToken } from "../pages/ifLogged.js";
 
-const workSectionEl = document.getElementById("api-works"); */
+const workSectionEl = document.getElementById("api-works");
 const modalOnClick = document.getElementById("modifyProjects");
 console.log("modifyProjects element:", modalOnClick);
 
 export async function showModal1() {
+	const tokenFound = await getToken();
 	document.addEventListener("DOMContentLoaded", () => {
-		const token = localStorage.getItem("user_token");
-		if (token) {
+		const openModalOnClick = document.getElementById("modifyProjects");
+		if (tokenFound) {
+			console.log("found HELLOOOOO", openModalOnClick);
+			observer.disconnect();
+		} else {
+			console.log("noooooooooooo :(");
+		}
+	});
+	/* if (tokenFound) {
 			modalOnClick.addEventListener("click", () => {
 				console.log("found:", modalOnClick);
 				const modalAside = document.getElementById("modal-1");
@@ -20,11 +28,10 @@ export async function showModal1() {
 			});
 		} else {
 			console.log("user is not logged in");
-		}
-	});
+		} */
 }
 
-/* async function displayWorksInModal(Works) {
+export async function displayWorksInModal(Works) {
 	workSectionEl.innerHTML = "";
 
 	for (const work of Works) {
@@ -41,7 +48,7 @@ export async function showModal1() {
 		figure.appendChild(figcaption);
 		workSectionEl.appendChild(figure);
 	}
-} */
+}
 export async function closeModal() {
 	const closeModalButton = document.getElementById("js-modal-close");
 	if (closeModalButton) {

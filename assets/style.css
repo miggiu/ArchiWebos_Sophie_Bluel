@@ -322,7 +322,7 @@ li a {
 	margin-bottom: 10px;
 }
 
-#login p {
+#login a {
 	text-align: center;
 	font-family: "Work Sans";
 	font-weight: bold;
@@ -417,6 +417,12 @@ footer nav ul {
 	margin: 2em;
 }
 
+/* footer nav li {
+	font-family: "Work Sans";
+	font-weight: 300;
+	line-height: 16.42px;
+	font-size: 14px;
+} */
 /* aside modal */
 
 #openModal {
