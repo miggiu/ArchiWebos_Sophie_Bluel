@@ -3,7 +3,7 @@ import { HOMEPAGE } from "../assets/variables.js";
 const logoutEl = document.getElementById("logout");
 const loggedBannerEl = document.getElementById("loggedBanner");
 const projetsEl = document.getElementById("projets");
-const sectionAside = document.getElementById("portfolio");
+/* const sectionAside = document.getElementById("portfolio"); */
 
 export async function getToken() {
 	let token = localStorage.getItem("user_token");
@@ -42,7 +42,7 @@ export async function updatePage() {
 		console.log("no token found");
 	}
 }
-export async function createModalTemplate() {
+/* export async function createModalTemplate() {
 	const tokenFound = await getToken();
 	if (tokenFound) {
 		const modalAside = document.createElement("aside");
@@ -81,11 +81,15 @@ export async function createModalTemplate() {
 	} else {
 		console.log("no token found");
 	}
-}
+} */
 
 export async function modifyInterface() {
-	updatePage();
-	createModalTemplate();
+	if (getToken()) {
+		updatePage();
+		/* createModalTemplate(); */
+	} else {
+		return;
+	}
 }
 
 export function logOut() {

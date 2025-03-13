@@ -1,24 +1,17 @@
+import { BASE_API_URL } from "./variables.js";
+import { getWorksAndReturn } from "./api.js";
 import { getToken } from "../pages/ifLogged.js";
 
 const workSectionEl = document.getElementById("api-works");
-const modalOnClick = document.getElementById("modifyProjects");
-console.log("modifyProjects element:", modalOnClick);
+const modalAside = document.getElementById("modal-1");
 
 export async function showModal1() {
 	const tokenFound = await getToken();
 	document.addEventListener("DOMContentLoaded", () => {
-		const openModalOnClick = document.getElementById("modifyProjects");
 		if (tokenFound) {
-			console.log("found HELLOOOOO", openModalOnClick);
-			observer.disconnect();
-		} else {
-			console.log("noooooooooooo :(");
-		}
-	});
-	/* if (tokenFound) {
+			const modalOnClick = getElementById("modifyProjects");
 			modalOnClick.addEventListener("click", () => {
 				console.log("found:", modalOnClick);
-				const modalAside = document.getElementById("modal-1");
 				if (modalAside) {
 					modalAside.setAttribute("aria-hidden", "false");
 					modalAside.setAttribute("aria-modal", "true");
@@ -28,32 +21,91 @@ export async function showModal1() {
 			});
 		} else {
 			console.log("user is not logged in");
-		} */
+		}
+	});
 }
-
-export async function displayWorksInModal(Works) {
+async function fetchAndDisplayWorksInModal(work) {
 	workSectionEl.innerHTML = "";
-
-	for (const work of Works) {
-		const workData = await getWorksAndReturn(work.id);
+	const works = await getWorksAndReturn();
+	for (const work of works) {
 		const figure = document.createElement("figure");
-		figure.setAttribute("id", `work-${workData.id}`);
+		figure.classList.add("modal-work");
+		figure.setAttribute("id", `work-${work.id}`);
 		const img = document.createElement("img");
-		img.src = workData.imageUrl;
-		img.alt = workData.title;
-		const figcaption = document.createElement("figcaption");
-		figcaption.textContent = workData.title;
+		img.src = work.imageUrl;
+		img.alt = work.title;
+		const deleteIconDiv = document.createElement("div");
+		deleteIconDiv.setAttribute("id", "delete-icon-div");
+		const deleteIcon = document.createElement("img");
+		deleteIcon.setAttribute("id", `icon-${work.id}`);
+		deleteIcon.classList.add("delete-icon");
+		deleteIcon.src = "assets/icons/delete.png";
+		deleteIcon.alt = "delete icon";
 
+		deleteIconDiv.appendChild(deleteIcon);
+		figure.appendChild(deleteIconDiv);
 		figure.appendChild(img);
-		figure.appendChild(figcaption);
 		workSectionEl.appendChild(figure);
 	}
 }
+
+async function integrateAddWorkButton() {
+	const buttonAddWork = document.createElement("button");
+	buttonAddWork.setAttribute("id", "add-new-work");
+	buttonAddWork.setAttribute("type", "button");
+	buttonAddWork.innerHTML("Ajouter une photo");
+	workSectionEl.appendChild(buttonAddWork);
+}
+
+export async function displayFirstModalContent() {
+	fetchAndDisplayWorksInModal();
+	integrateAddWorkButton();
+}
+
+export async function deleteWork() {
+	const tokenFound = await getToken();
+	const work = await getWorksAndReturn();
+	document.addEventListener("DOMContentLoaded", () => {
+		if (tokenFound) {
+			const deleteIcon = document.getElementById(`icon-${work.id}`);
+			deleteIcon.addEventListener("click", () => {
+				console.log(deleteIcon);
+				const url = `${BASE_API_URL}/works/{id}`;
+				const options = {
+					method: "DELETE",
+					headers: {
+						"Content-Type": "application/json",
+						userId: 1,
+					},
+					body: JSON.stringify(data),
+				};
+				fetch(url, options)
+					.then((response) => {
+						if (!response.ok) {
+							throw new Error("Network response was not ok");
+						}
+						console.log("Resource deleted successfully");
+						const deletedWork = document.getElementById(`work-${work.id}`);
+						deletedWork.remove();
+						fetchAndDisplayWorksInModal();
+					})
+					.catch((error) => {
+						console.error(
+							"There was a problem with the DELETE request:",
+							error.message
+						);
+					});
+			});
+		} else {
+			return;
+		}
+	});
+}
+
 export async function closeModal() {
 	const closeModalButton = document.getElementById("js-modal-close");
 	if (closeModalButton) {
 		closeModalButton.addEventListener("click", () => {
-			const modalAside = document.getElementById("modal-1");
 			if (modalAside) {
 				modalAside.classList.remove("modalVisible");
 				modalAside.classList.add("modalInvisible");

@@ -3,8 +3,9 @@ import { ifCurrent } from "./shared.js";
 import { getToken, modifyInterface, logOut } from "./ifLogged.js";
 import {
 	showModal1,
+	displayFirstModalContent,
+	deleteWork,
 	closeModal,
-	displayWorksInModal,
 } from "../assets/modale.js";
 
 const galleryEl = document.querySelector(".gallery");
@@ -70,7 +71,8 @@ async function init() {
 	getToken();
 	modifyInterface();
 	showModal1();
-	displayWorksInModal();
+	displayFirstModalContent();
+	deleteWork();
 	closeModal();
 	logOut();
 }

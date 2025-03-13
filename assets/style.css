@@ -456,17 +456,19 @@ footer nav ul {
 
 .modal-wrapper{
 	background-color: white;
-	width: 600px;
+	width: 630px;
 	max-width: calc(100vh - 20px);
-	height: 600px; 
+	height: 900px; 
 	max-height: calc(100vh - 20px);
-	padding: 20px;
+	padding: 0 20px 0 20px;
 	overflow: auto;
+	border-radius: 10px;
 }
 
 .close-modal-div {
 	display: flex;
 	justify-self: flex-end;
+	margin: 25px 0 10px 0;
 }
 
 #js-modal-close{
@@ -484,4 +486,48 @@ footer nav ul {
 	font-size: 26px;
 	color: black;
 	align-items: center;
+	margin: 45px 0 45px 0;
+}
+
+#api-works{
+	display: flex;
+	margin: 0;
+	flex-wrap:wrap;
+	padding: 0 60px 0 60px;
+}
+
+.modal-work{
+    width: 18%;
+    display: flex;
+    flex-direction: column;
+    margin: 5px;
+}
+
+#delete-icon-div{
+	display: flex;
+	justify-content: end;
+}
+
+.delete-icon{
+	width: 20px;
+	height: 20px;
+	position: relative;
+    bottom: -25px;
+	left: -5px;
+}
+
+#add-new-work{
+	font-family: "Syne";
+	font-weight: 700;
+	color: white;
+	background-color: #1d6154;
+	margin: 2em auto;
+	padding: 0 40px 0 40px;
+	width: 45%;
+	text-align: center;
+	border-radius: 60px;
+}
+
+#add-new-work :hover{
+	background-color: #0E2F28;
 }
