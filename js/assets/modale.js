@@ -38,9 +38,9 @@ async function fetchAndDisplayWorksInModal(work) {
 		deleteIconDiv.setAttribute("id", "delete-icon-div");
 		const deleteIcon = document.createElement("img");
 		deleteIcon.setAttribute("id", `icon-${work.id}`);
-		deleteIcon.classList.add("delete-icon");
 		deleteIcon.src = "assets/icons/delete.png";
 		deleteIcon.alt = "delete icon";
+		deleteIcon.classList.add("delete-icon");
 
 		deleteIconDiv.appendChild(deleteIcon);
 		figure.appendChild(deleteIconDiv);
@@ -50,11 +50,22 @@ async function fetchAndDisplayWorksInModal(work) {
 }
 
 async function integrateAddWorkButton() {
+	const buttonAddWorkDiv = document.createElement("div");
+	buttonAddWorkDiv.setAttribute("id", "button-add-work-div");
+
 	const buttonAddWork = document.createElement("button");
 	buttonAddWork.setAttribute("id", "add-new-work");
 	buttonAddWork.setAttribute("type", "button");
-	buttonAddWork.innerHTML("Ajouter une photo");
-	workSectionEl.appendChild(buttonAddWork);
+	buttonAddWork.textContent = "Ajouter une photo";
+
+	const dividerEl = document.createElement("img");
+	dividerEl.src = "assets/icons/divider.png";
+	dividerEl.alt = "divider";
+	dividerEl.classList.add("divider-modal");
+
+	buttonAddWorkDiv.appendChild(dividerEl);
+	buttonAddWorkDiv.appendChild(buttonAddWork);
+	workSectionEl.insertAdjacentElement("afterend", buttonAddWorkDiv);
 }
 
 export async function displayFirstModalContent() {
@@ -115,5 +126,3 @@ export async function closeModal() {
 		});
 	}
 }
-
-/* displayWorksInModal(); */

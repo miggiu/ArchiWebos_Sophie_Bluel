@@ -7,7 +7,7 @@ const projetsEl = document.getElementById("projets");
 
 export async function getToken() {
 	let token = localStorage.getItem("user_token");
-	console.log("Token found:", token);
+	/* console.log("Token found:", token); */
 	return !!token;
 }
 
