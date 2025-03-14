@@ -186,13 +186,13 @@ li a {
 }
 
 #logout {
-	cursor:pointer;
+	cursor: pointer;
 }
 /* li:hover {
 	color: #b1663c;
 } */
 
-.current { 
+.current {
 	font-weight: bold;
 }
 
@@ -218,9 +218,9 @@ li a {
 }
 
 #loggedBanner p i {
-	color:white;
+	color: white;
 	padding-right: 12px;
-} 
+}
 
 #introduction {
 	display: flex;
@@ -249,7 +249,7 @@ li a {
 	text-align: center;
 	margin-bottom: 1em;
 	margin-top: 140px;
-	display:flex;
+	display: flex;
 	justify-content: center;
 }
 
@@ -259,12 +259,12 @@ li a {
 	font-size: 14px;
 	color: black;
 	align-content: center;
-	cursor:pointer;
+	cursor: pointer;
 	border: none;
 	background-color: unset;
 }
 
-#modifyProjects  i{
+#modifyProjects i {
 	margin: 0 10px 0 30px;
 }
 
@@ -309,7 +309,8 @@ li a {
 	margin: auto;
 }
 
-#contact, #login > * {
+#contact,
+#login > * {
 	text-align: center;
 }
 
@@ -391,8 +392,8 @@ li a {
 	border-radius: 60px;
 }
 
-#login input[type="submit"]:hover{
-	background-color: #0E2F28;
+#login input[type="submit"]:hover {
+	background-color: #0e2f28;
 }
 
 .fa-eye {
@@ -404,11 +405,10 @@ li a {
 	left: 520px;
 	color: #1d6154;
 	opacity: 75%;
-
 }
 
 .fa-eye:hover {
-	color:#0E2F28
+	color: #0e2f28;
 }
 
 footer nav ul {
@@ -423,42 +423,43 @@ footer nav ul {
 	line-height: 16.42px;
 	font-size: 14px;
 } */
-/* aside modal */
+
+/* aside modal 1 */
 
 #openModal {
 	text-decoration: none;
 	color: black;
 }
 
-#openModal i{
+#openModal i {
 	color: black;
 }
 
-.modalTemplate{
-	display: flex; 
+.modalTemplate {
+	display: flex;
 	align-items: center;
 	justify-content: center;
-	position : fixed; 
+	position: fixed;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background-color: rgba(0,0,0,0.7);
+	background-color: rgba(0, 0, 0, 0.7);
 }
 
-.modalVisible{
+.modalVisible {
 	display: flex;
 }
 
-.modalInvisible{
+.modalInvisible {
 	display: none;
 }
 
-.modal-wrapper{
+.modal-wrapper {
 	background-color: white;
 	width: 630px;
 	max-width: calc(100vh - 20px);
-	height: 800px; 
+	height: 800px;
 	max-height: calc(100vh - 20px);
 	padding: 0 20px 0 20px;
 	overflow: auto;
@@ -471,16 +472,16 @@ footer nav ul {
 	margin: 25px 0 10px 0;
 }
 
-#js-modal-close{
+#js-modal-close {
 	all: unset;
 }
 
-#close-mark{
+#close-mark {
 	width: 24px;
 	height: 24px;
 }
 
-#modalTitle{
+#modalTitle {
 	font-family: "Work Sans";
 	font-weight: 400;
 	font-size: 26px;
@@ -489,34 +490,34 @@ footer nav ul {
 	margin: 45px 0 45px 0;
 }
 
-#api-works{
+#api-works {
 	display: flex;
 	margin: 0;
-	flex-wrap:wrap;
+	flex-wrap: wrap;
 	padding: 0 60px 0 60px;
 }
 
-.modal-work{
-    width: 18%;
-    display: flex;
-    flex-direction: column;
-    margin: 5px;
+.modal-work {
+	width: 18%;
+	display: flex;
+	flex-direction: column;
+	margin: 5px;
 }
 
-#delete-icon-div{
+#delete-icon-div {
 	display: flex;
 	justify-content: end;
 }
 
-.delete-icon{
+.delete-icon {
 	width: 20px;
 	height: 20px;
 	position: relative;
-    bottom: -25px;
+	bottom: -25px;
 	left: -5px;
 }
 
-#button-add-work-div{
+#button-add-work-div {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
@@ -528,7 +529,7 @@ footer nav ul {
 	margin: 60px 0 10px 0;
 }
 
-#add-new-work{
+#add-new-work {
 	font-family: "Syne";
 	font-weight: 700;
 	color: white;
@@ -541,6 +542,80 @@ footer nav ul {
 	border-radius: 60px;
 }
 
-#add-new-work:hover{
-	background-color: #0E2F28;
+#add-new-work:hover {
+	background-color: #0e2f28;
+}
+
+/* second modal */
+
+#ModalTitleAddPhoto {
+	font-family: "Work Sans";
+	font-weight: 400;
+	font-size: 26px;
+	color: black;
+	align-items: center;
+	margin: 45px 0 45px 0;
+}
+
+#js-modal-close-modal2 {
+	all: unset;
+}
+
+#close-mark-modal2 {
+	width: 24px;
+	height: 24px;
+}
+
+#modal-add-work {
+	display: flex;
+	justify-content: center;
+	margin: 0 105px 0 105px;
+	height: 30%;
+	background-color: #e8f1f6;
+}
+
+#input-add-work {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	width: 100%;
+}
+
+#photo-icon {
+	width: inherit;
+	display: flex;
+	justify-content: center;
+}
+
+#photo-icon i {
+	color: #cbd6dc;
+}
+
+input[type="file"] {
+	display: none;
+}
+
+label {
+	font-family: "Syne";
+	font-weight: 500;
+	font-size: 14px;
+	color: #306685;
+	background-color: #cbd6dc;
+	margin: 10px auto;
+	padding: 0 40px 0 40px;
+	width: 30%;
+	height: 45px;
+	border-radius: 60px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#input-add-work p {
+	display: flex;
+	justify-content: center;
+	color: #444444;
+	font-family: "Work Sans";
+	font-weight: 400;
+	font-size: 10px;
 }

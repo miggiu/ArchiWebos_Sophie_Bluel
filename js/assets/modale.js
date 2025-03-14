@@ -112,6 +112,7 @@ export async function deleteWork() {
 		}
 	});
 }
+/* deleteWork ajouter le delete de l'image aussi sur l'index */
 
 export async function closeModal() {
 	const closeModalButton = document.getElementById("js-modal-close");
