@@ -68,7 +68,7 @@
 			</form>
 		</section>
 	</main>
-	<aside id="modal-1" class="modalTemplate modalInvisible" aria-hidden="false" aria-modal="true"
+	<aside id="modal-1" class="modalTemplate modalVisible" aria-hidden="false" aria-modal="true"
 		aria-labelledby="modalTitle" role="alertdialog">
 		<div class="js-modal-stop modal-wrapper">
 			<div class="close-modal-div">
@@ -82,8 +82,8 @@
 			</section>
 		</div>
 	</aside>
-	<aside id="modal-2" class="modalTemplate modalVisible" aria-hidden="false" aria-modal="true"
-		aria-labelledby="modalTitle" role="alertdialog">
+	<aside id="modal-2" class="modalTemplate modalInvisible" aria-hidden="false" aria-modal="true"
+		aria-labelledby="ModalTitleAddPhoto" role="alertdialog">
 		<div class="js-modal-stop modal-wrapper">
 			<div class="close-modal-div">
 				<button id="js-modal-close-modal2">
@@ -96,7 +96,7 @@
 					<div id="photo-icon">
 						<i class="fa-regular fa-image fa-6x"></i>
 					</div>
-					<label for="add-file">+ Ajouter photo
+					<label for="add-file" id="add-file-label">+ Ajouter photo
 						<input type="file" id="add-file" name="add-new-file">
 					</label>
 					<p>jpg, png : 4mo max</p>

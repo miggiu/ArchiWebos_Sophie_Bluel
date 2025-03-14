@@ -498,7 +498,7 @@ footer nav ul {
 }
 
 .modal-work {
-	width: 18%;
+	width: calc(100% / 6);
 	display: flex;
 	flex-direction: column;
 	margin: 5px;
@@ -519,27 +519,30 @@ footer nav ul {
 
 #button-add-work-div {
 	display: flex;
-	flex-wrap: wrap;
 	justify-content: center;
+	flex-direction: column;
+	align-items: center;
 }
 
 .divider-modal {
-	width: 500px;
-	height: 3px;
-	margin: 60px 0 10px 0;
+	width: 80%;
+	margin: 70px 0 35px 0;
 }
 
 #add-new-work {
 	font-family: "Syne";
 	font-weight: 700;
+	font-size: 14px;
 	color: white;
 	background-color: #1d6154;
-	margin: 2em auto;
 	padding: 0 40px 0 40px;
 	width: 35%;
 	height: 35px;
 	text-align: center;
 	border-radius: 60px;
+	border: none;
+	align-items: center;
+	margin: 0 0 45px 0;
 }
 
 #add-new-work:hover {
@@ -595,7 +598,7 @@ input[type="file"] {
 	display: none;
 }
 
-label {
+#add-file-label label {
 	font-family: "Syne";
 	font-weight: 500;
 	font-size: 14px;

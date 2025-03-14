@@ -7,24 +7,22 @@ const modalAside = document.getElementById("modal-1");
 
 export async function showModal1() {
 	const tokenFound = await getToken();
-	document.addEventListener("DOMContentLoaded", () => {
-		if (tokenFound) {
-			const modalOnClick = getElementById("modifyProjects");
-			modalOnClick.addEventListener("click", () => {
-				console.log("found:", modalOnClick);
-				if (modalAside) {
-					modalAside.setAttribute("aria-hidden", "false");
-					modalAside.setAttribute("aria-modal", "true");
-					modalAside.classList.remove("modalInvisible");
-					modalAside.classList.add("modalVisible");
-				}
-			});
-		} else {
-			console.log("user is not logged in");
-		}
-	});
+	if (tokenFound) {
+		const modalOnClick = document.getElementById("modifyProjects");
+		modalOnClick.addEventListener("click", () => {
+			if (modalAside) {
+				modalAside.setAttribute("aria-hidden", "false");
+				modalAside.setAttribute("aria-modal", "true");
+				modalAside.classList.remove("modalInvisible");
+				modalAside.classList.add("modalVisible");
+			}
+		});
+	} else {
+		console.log("user is not logged in");
+	}
 }
-async function fetchAndDisplayWorksInModal(work) {
+
+async function fetchAndDisplayWorksInModal() {
 	workSectionEl.innerHTML = "";
 	const works = await getWorksAndReturn();
 	for (const work of works) {
@@ -58,9 +56,7 @@ async function integrateAddWorkButton() {
 	buttonAddWork.setAttribute("type", "button");
 	buttonAddWork.textContent = "Ajouter une photo";
 
-	const dividerEl = document.createElement("img");
-	dividerEl.src = "assets/icons/divider.png";
-	dividerEl.alt = "divider";
+	const dividerEl = document.createElement("hr");
 	dividerEl.classList.add("divider-modal");
 
 	buttonAddWorkDiv.appendChild(dividerEl);
@@ -75,20 +71,22 @@ export async function displayFirstModalContent() {
 
 export async function deleteWork() {
 	const tokenFound = await getToken();
-	const work = await getWorksAndReturn();
-	document.addEventListener("DOMContentLoaded", () => {
-		if (tokenFound) {
-			const deleteIcon = document.getElementById(`icon-${work.id}`);
+	if (!tokenFound) return;
+	const works = await getWorksAndReturn();
+	works.forEach((work) => {
+		const deleteIcon = document.getElementById(`icon-${work.id}`);
+		if (deleteIcon) {
 			deleteIcon.addEventListener("click", () => {
 				console.log(deleteIcon);
-				const url = `${BASE_API_URL}/works/{id}`;
+
+				const url = `${BASE_API_URL}works/${work.id}`;
 				const options = {
 					method: "DELETE",
 					headers: {
+						/* prettier-ignore */
+						"Authorization": `Bearer-${tokenFound}`,
 						"Content-Type": "application/json",
-						userId: 1,
 					},
-					body: JSON.stringify(data),
 				};
 				fetch(url, options)
 					.then((response) => {
@@ -99,6 +97,7 @@ export async function deleteWork() {
 						const deletedWork = document.getElementById(`work-${work.id}`);
 						deletedWork.remove();
 						fetchAndDisplayWorksInModal();
+						fetchAndDisplayWorks();
 					})
 					.catch((error) => {
 						console.error(
@@ -108,11 +107,10 @@ export async function deleteWork() {
 					});
 			});
 		} else {
-			return;
+			console.error(`Element with ID icon-${work.id} not found`);
 		}
 	});
 }
-/* deleteWork ajouter le delete de l'image aussi sur l'index */
 
 export async function closeModal() {
 	const closeModalButton = document.getElementById("js-modal-close");
