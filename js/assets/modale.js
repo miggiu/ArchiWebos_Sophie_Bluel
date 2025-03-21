@@ -1,15 +1,15 @@
 import { BASE_API_URL } from "./variables.js";
-import { getWorksAndReturn } from "./api.js";
+import { getWorksAndReturn, getCategoriesAndReturn } from "./api.js";
 import { getToken } from "../pages/ifLogged.js";
 
-const workSectionEl = document.getElementById("api-works");
-const modalAside = document.getElementById("modal-1");
+let originalModalTemplate = null;
 
-export async function showModal1() {
+export async function showModal() {
 	const tokenFound = await getToken();
 	if (tokenFound) {
 		const modalOnClick = document.getElementById("modifyProjects");
 		modalOnClick.addEventListener("click", () => {
+			const modalAside = document.getElementById("modal-content");
 			if (modalAside) {
 				modalAside.setAttribute("aria-hidden", "false");
 				modalAside.setAttribute("aria-modal", "true");
@@ -23,6 +23,12 @@ export async function showModal1() {
 }
 
 async function fetchAndDisplayWorksInModal() {
+	const workSectionEl = document.getElementById("api-works");
+
+	if (!workSectionEl) {
+		console.error("Element with ID api-works not found");
+		return;
+	}
 	workSectionEl.innerHTML = "";
 	const works = await getWorksAndReturn();
 	for (const work of works) {
@@ -48,6 +54,7 @@ async function fetchAndDisplayWorksInModal() {
 }
 
 async function integrateAddWorkButton() {
+	const workSectionEl = document.getElementById("api-works");
 	const buttonAddWorkDiv = document.createElement("div");
 	buttonAddWorkDiv.setAttribute("id", "button-add-work-div");
 
@@ -67,6 +74,144 @@ async function integrateAddWorkButton() {
 export async function displayFirstModalContent() {
 	fetchAndDisplayWorksInModal();
 	integrateAddWorkButton();
+	if (!originalModalTemplate) {
+		const modalAside = document.getElementById("modal-content");
+		if (modalAside) {
+			originalModalTemplate = modalAside.innerHTML;
+		}
+	}
+}
+
+export async function showModal2() {
+	const tokenFound = await getToken();
+	if (tokenFound) {
+		const displayModal2 = document.getElementById("add-new-work");
+		displayModal2.addEventListener("click", () => {
+			const modalAside = document.getElementById("modal-content");
+			if (modalAside) {
+				modalAside.innerHTML = "";
+				modalAside.setAttribute("id", "modal-2");
+				modalAside.setAttribute("aria-hidden", "false");
+				modalAside.setAttribute("aria-modal", "true");
+				modalAside.setAttribute("aria-labelledby", "modalTitleAddPhoto");
+				modalAside.setAttribute("role", "alertdialog");
+				modalAside.classList.add("modalTemplate");
+				modalAside.classList.add("modalVisible");
+				const modalDiv2 = document.createElement("div");
+				modalDiv2.classList.add("js-modal-stop");
+				modalDiv2.classList.add("modal-wrapper");
+				const divIconsModal2 = document.createElement("div");
+				divIconsModal2.classList.add("icons-modal-div");
+				const deleteIconDiv2 = document.createElement("div");
+				deleteIconDiv2.setAttribute("id", "delete-icon-div");
+				const deleteIcon2 = document.createElement("i");
+				deleteIcon2.setAttribute("id", "close-mark2");
+				deleteIcon2.classList.add("fa-solid");
+				deleteIcon2.classList.add("fa-xmark");
+				deleteIcon2.classList.add("fa-lg");
+				const returnIconDiv = document.createElement("div");
+				returnIconDiv.setAttribute("id", "return-icon-div");
+				const returnIcon = document.createElement("i");
+				returnIcon.setAttribute("id", "return-icon");
+				returnIcon.classList.add("fa-solid");
+				returnIcon.classList.add("fa-arrow-left");
+				returnIcon.classList.add("fa-lg");
+				const modalTitle2 = document.createElement("h1");
+				modalTitle2.setAttribute("id", "modalTitleAddPhoto");
+				modalTitle2.textContent = "Ajout photo";
+				const sectionFormAddWork = document.createElement("section");
+				sectionFormAddWork.setAttribute("id", "section-form-add-work");
+				const divAddWork = document.createElement("div");
+				divAddWork.setAttribute("id", "input-add-work");
+				const divPhotoIcon = document.createElement("div");
+				divPhotoIcon.setAttribute("id", "photo-icon-div");
+				const photoIcon = document.createElement("i");
+				photoIcon.classList.add("fa-regular");
+				photoIcon.classList.add("fa-image");
+				photoIcon.classList.add("fa-6x");
+				const inputLabel = document.createElement("label");
+				inputLabel.setAttribute("for", "add-file");
+				inputLabel.setAttribute("id", "add-file-label");
+				inputLabel.textContent = "+ Ajouter photo";
+				const inputFile = document.createElement("input");
+				inputFile.setAttribute("type", "file");
+				inputFile.setAttribute("id", "add-file");
+				inputFile.setAttribute("name", "add-new-file");
+				const labelP = document.createElement("p");
+				labelP.setAttribute("id", "label-p");
+				labelP.textContent = "jpg, png : 4mo max";
+
+				modalAside.appendChild(modalDiv2);
+				modalDiv2.appendChild(divIconsModal2);
+				divIconsModal2.appendChild(returnIconDiv);
+				returnIconDiv.appendChild(returnIcon);
+				divIconsModal2.appendChild(deleteIconDiv2);
+				deleteIconDiv2.appendChild(deleteIcon2);
+
+				modalDiv2.appendChild(modalTitle2);
+				modalDiv2.appendChild(sectionFormAddWork);
+				sectionFormAddWork.appendChild(divAddWork);
+				divAddWork.appendChild(divPhotoIcon);
+				divPhotoIcon.appendChild(photoIcon);
+				divAddWork.appendChild(inputLabel);
+				inputLabel.appendChild(inputFile);
+				divAddWork.appendChild(labelP);
+			}
+		});
+	} else {
+		console.log("user is not logged in");
+	}
+}
+
+export async function addFormToModal(modalDiv2) {
+	const modalDiv2 = document.getElementById("modal-2");
+
+	const sectionAddWork = document.createElement("section");
+	sectionAddWork.setAttribute("id", "section-add-work");
+	const formAddWork = document.createElement("form");
+	formAddWork.setAttribute("id", "form-addWork");
+	const inputTitle = document.createElement("input");
+	inputTitle.setAttribute("type", "text");
+	inputTitle.setAttribute("id", "input-title");
+	inputTitle.setAttribute("name", "title");
+	const categoryDropdown = document.createElement("select");
+	categoryDropdown.setAttribute("id", "category-dropdown");
+	const defaultOption = document.createElement("option");
+	defaultOption.setAttribute("value", "default");
+	defaultOption.value = "";
+	defaultOption.selected = true;
+	defaultOption.disabled = true;
+	const categoryLabel = document.createElement("label");
+	categoryLabel.setAttribute("for", "category-dropdown");
+	categoryLabel.textContent = "Catégorie";
+	categoryDropdown.appendChild(defaultOption);
+	try {
+		const categories = await getCategoriesAndReturn();
+		categories.forEach((category) => {
+			const option = document.createElement("option");
+			option.value = category.id;
+			option.textContent = category.name;
+			categoryDropdown.appendChild(option);
+		});
+		console.log("categorie loaded", categories.length);
+	} catch (error) {
+		console.error("error loading categories", error.message);
+	}
+
+	formAddWork.appendChild(inputTitle);
+	formAddWork.appendChild(categoryLabel);
+	formAddWork.appendChild(categoryDropdown);
+	sectionAddWork.appendChild(formAddWork);
+	modalDiv2.appendChild(sectionAddWork);
+}
+
+export async function displaySecondModalContent() {
+	const tokenFound = await getToken();
+	if (tokenFound) {
+		await showModal2();
+	} else {
+		console.error("user is not logged in");
+	}
 }
 
 export async function deleteWork() {
@@ -84,24 +229,26 @@ export async function deleteWork() {
 					method: "DELETE",
 					headers: {
 						/* prettier-ignore */
-						"Authorization": `Bearer-${tokenFound}`,
+						"Authorization": `Bearer ${tokenFound}`,
 						"Content-Type": "application/json",
 					},
 				};
 				fetch(url, options)
 					.then((response) => {
-						if (!response.ok) {
-							throw new Error("Network response was not ok");
+						if (response.status === 200 || response.status === 204) {
+							console.log("work deleted successfully", work.id);
+							const deletedWork = document.getElementById(`work-${work.id}`);
+							deletedWork.remove();
+							fetchAndDisplayWorksInModal();
+							fetchAndDisplayWorks();
+						} else {
+							console.log("delete not permitted - status", response.status);
+							throw new Error("delete not permitted");
 						}
-						console.log("Resource deleted successfully");
-						const deletedWork = document.getElementById(`work-${work.id}`);
-						deletedWork.remove();
-						fetchAndDisplayWorksInModal();
-						fetchAndDisplayWorks();
 					})
 					.catch((error) => {
 						console.error(
-							"There was a problem with the DELETE request:",
+							"there was an issue with the delete request:",
 							error.message
 						);
 					});
@@ -113,14 +260,53 @@ export async function deleteWork() {
 }
 
 export async function closeModal() {
-	const closeModalButton = document.getElementById("js-modal-close");
+	const closeModalButton = document.getElementById("close-mark");
 	if (closeModalButton) {
 		closeModalButton.addEventListener("click", () => {
+			const modalAside = document.getElementById("modal-content");
 			if (modalAside) {
 				modalAside.classList.remove("modalVisible");
 				modalAside.classList.add("modalInvisible");
 				modalAside.setAttribute("aria-hidden", "true");
 				modalAside.setAttribute("aria-modal", "false");
+			}
+		});
+	}
+}
+
+export async function closeModal2() {
+	const closeModalButton2 = document.getElementById("js-modal-close-modal2");
+	if (closeModalButton2) {
+		closeModalButton2.addEventListener("click", () => {
+			const modalAside = document.getElementById("modal-2");
+			if (modalAside) {
+				modalAside.classList.remove("modalVisible");
+				modalAside.classList.add("modalInvisible");
+				modalAside.setAttribute("aria-hidden", "true");
+				modalAside.setAttribute("aria-modal", "false");
+			}
+		});
+	}
+}
+
+export async function returnToModal1() {
+	const returnIcon = document.getElementById("return-icon");
+	if (returnIcon) {
+		returnIcon.addEventListener("click", async () => {
+			const modalAside = document.getElementById("modal-2");
+			if (modalAside) {
+				modalAside.setAttribute("id", "modal-content");
+				if (originalModalTemplate) {
+					modalAside.innerHTML = originalModalTemplate;
+					await deleteWork();
+				} else {
+					modalAside.innerHTML = "";
+					await displayFirstModalContent();
+				}
+				closeModal();
+				showModal2();
+			} else {
+				console.log("error on returning to modal 1");
 			}
 		});
 	}

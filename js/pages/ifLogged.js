@@ -3,11 +3,11 @@ import { HOMEPAGE } from "../assets/variables.js";
 const logoutEl = document.getElementById("logout");
 const loggedBannerEl = document.getElementById("loggedBanner");
 const projetsEl = document.getElementById("projets");
-/* const sectionAside = document.getElementById("portfolio"); */
+const sectionAside = document.getElementById("portfolio");
 
 export async function getToken() {
 	let token = localStorage.getItem("user_token");
-	/* console.log("Token found:", token); */
+	console.log("Token found:", token);
 	return !!token;
 }
 
@@ -42,17 +42,17 @@ export async function updatePage() {
 		console.log("no token found");
 	}
 }
-/* export async function createModalTemplate() {
+export async function createModalTemplate() {
 	const tokenFound = await getToken();
 	if (tokenFound) {
 		const modalAside = document.createElement("aside");
-		modalAside.setAttribute("id", "modal-1");
+		modalAside.setAttribute("id", "modal-content");
 		modalAside.classList.add("modalTemplate");
 		modalAside.setAttribute("aria-hidden", "false");
 		modalAside.setAttribute("aria-modal", "true");
 		modalAside.setAttribute("aria-labelledby", "modalTitle");
 		modalAside.setAttribute("role", "alertdialog");
-		modalAside.classList.add("modalVisible");
+		modalAside.classList.add("modalInvisible");
 		const modalDiv = document.createElement("div");
 		modalDiv.classList.add("js-modal-stop");
 		modalDiv.classList.add("modal-wrapper");
@@ -61,12 +61,11 @@ export async function updatePage() {
 		const modalTitle = document.createElement("h1");
 		modalTitle.setAttribute("id", "modalTitle");
 		modalTitle.textContent = "Galerie photo";
-		const closeModalButton = document.createElement("button");
-		closeModalButton.setAttribute("id", "js-modal-close");
 		const closeModalIcon = document.createElement("i");
 		closeModalIcon.setAttribute("id", "close-mark");
 		closeModalIcon.classList.add("fa-solid");
 		closeModalIcon.classList.add("fa-xmark");
+		closeModalIcon.classList.add("fa-lg");
 		const workSection = document.createElement("section");
 		workSection.setAttribute("id", "api-works");
 
@@ -74,19 +73,19 @@ export async function updatePage() {
 
 		modalAside.appendChild(modalDiv);
 		modalDiv.appendChild(closeModalDiv);
-		closeModalDiv.appendChild(closeModalButton);
+		closeModalDiv.appendChild(closeModalIcon);
 		modalDiv.appendChild(modalTitle);
-		closeModalButton.appendChild(closeModalIcon);
+
 		modalDiv.appendChild(workSection);
 	} else {
 		console.log("no token found");
 	}
-} */
+}
 
 export async function modifyInterface() {
-	if (getToken()) {
+	if (await getToken()) {
 		updatePage();
-		/* createModalTemplate(); */
+		createModalTemplate();
 	} else {
 		return;
 	}

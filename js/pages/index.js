@@ -2,10 +2,14 @@ import { getWorksAndReturn, getCategoriesAndReturn } from "../assets/api.js";
 import { ifCurrent } from "./shared.js";
 import { getToken, modifyInterface, logOut } from "./ifLogged.js";
 import {
-	showModal1,
+	showModal,
 	displayFirstModalContent,
 	deleteWork,
 	closeModal,
+	showModal2,
+	closeModal2,
+	returnToModal1,
+	displaySecondModalContent,
 } from "../assets/modale.js";
 
 const galleryEl = document.querySelector(".gallery");
@@ -68,12 +72,21 @@ async function init() {
 	const allWorks = await getWorksAndReturn();
 	fetchAndDisplayWorks(allWorks);
 	await fetchAndDisplayCategories();
-	getToken();
-	modifyInterface();
-	showModal1();
-	displayFirstModalContent();
+	await getToken();
+
+	await modifyInterface();
+
+	/* first modal */
+	showModal();
+	await displayFirstModalContent();
 	deleteWork();
 	closeModal();
+
+	/* second modal */
+	displaySecondModalContent();
+	closeModal2();
+	returnToModal1();
+
 	logOut();
 }
 

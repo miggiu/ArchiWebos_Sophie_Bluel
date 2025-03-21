@@ -465,20 +465,10 @@ footer nav ul {
 	overflow: auto;
 	border-radius: 10px;
 }
-
 .close-modal-div {
-	display: flex;
-	justify-self: flex-end;
 	margin: 25px 0 10px 0;
-}
-
-#js-modal-close {
-	all: unset;
-}
-
-#close-mark {
-	width: 24px;
-	height: 24px;
+	display: flex;
+	justify-content: flex-end;
 }
 
 #modalTitle {
@@ -551,7 +541,7 @@ footer nav ul {
 
 /* second modal */
 
-#ModalTitleAddPhoto {
+#modalTitleAddPhoto {
 	font-family: "Work Sans";
 	font-weight: 400;
 	font-size: 26px;
@@ -560,16 +550,15 @@ footer nav ul {
 	margin: 45px 0 45px 0;
 }
 
-#js-modal-close-modal2 {
-	all: unset;
+.icons-modal-div {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	margin: 25px 0 10px 0;
 }
 
-#close-mark-modal2 {
-	width: 24px;
-	height: 24px;
-}
-
-#modal-add-work {
+#section-form-add-work {
 	display: flex;
 	justify-content: center;
 	margin: 0 105px 0 105px;
@@ -584,13 +573,13 @@ footer nav ul {
 	width: 100%;
 }
 
-#photo-icon {
+#photo-icon-div {
 	width: inherit;
 	display: flex;
 	justify-content: center;
 }
 
-#photo-icon i {
+#photo-icon-div i {
 	color: #cbd6dc;
 }
 
@@ -598,7 +587,7 @@ input[type="file"] {
 	display: none;
 }
 
-#add-file-label label {
+#add-file-label {
 	font-family: "Syne";
 	font-weight: 500;
 	font-size: 14px;
