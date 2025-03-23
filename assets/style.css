@@ -346,12 +346,15 @@ li a {
 }
 
 #contact input,
-#login input {
+#login input,
+#form-addWork input,
+#form-addWork select {
 	height: 50px;
 	font-size: 1.2em;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
+
 #contact label {
 	margin: 2em 0 1em 0;
 }
@@ -379,6 +382,13 @@ li a {
 	text-align: center;
 	border-radius: 60px;
 }
+
+/* #login input[type="email"]{
+	font-family: "Work Sans";
+	font-weight: 400;
+	color: #444444;
+	width: 100%;
+} */
 
 #login input[type="submit"] {
 	font-family: "Syne";
@@ -588,7 +598,7 @@ input[type="file"] {
 }
 
 #add-file-label {
-	font-family: "Syne";
+	font-family: "Work Sans";
 	font-weight: 500;
 	font-size: 14px;
 	color: #306685;
@@ -610,4 +620,82 @@ input[type="file"] {
 	font-family: "Work Sans";
 	font-weight: 400;
 	font-size: 10px;
+}
+
+#section-add-work {
+	display: flex;
+	justify-content: center;
+	width: 100%;
+}
+
+#form-addWork {
+	margin: 0 105px 0 105px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	width: 80%;
+}
+#input-title-label {
+	margin-bottom: 10px;
+}
+#form-addWork input[type="text"] {
+	font-family: "Work Sans";
+	font-weight: 500;
+	color: #444444;
+	margin: 10px auto;
+	width: 100%;
+}
+
+#form-addWork select {
+	font-family: "Work Sans";
+	font-weight: 500;
+	color: #444444;
+	margin: 10px auto;
+	width: 100%;
+	padding-right: 10px;
+}
+
+#form-addWork select option {
+	font-family: "Work Sans";
+	font-weight: 500;
+	color: #444444;
+	background-color: white;
+}
+
+#form-addWork select option:disabled {
+	background-color: #cccccc;
+}
+
+#form-addWork select option:hover {
+	background-color: #e8f1f6;
+}
+
+#form-addWork select option:checked {
+	background-color: #1d6154;
+	color: white;
+}
+
+#category-dropdown-label {
+	margin-top: 10px;
+}
+
+#submit-add-work {
+	font-family: "Syne";
+	font-weight: 700;
+	font-size: 14px;
+	color: white;
+	background-color: #a7a7a7;
+	border-color: #a7a7a7;
+	margin: 10px auto;
+	padding: 0 40px 0 40px;
+	width: 65%;
+	height: 45px;
+	border-radius: 60px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#submit-add-work:hover {
+	background-color: #0e2f28;
 }
