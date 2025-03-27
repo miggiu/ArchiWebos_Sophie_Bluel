@@ -1,8 +1,15 @@
 import { BASE_API_URL } from "./variables.js";
 import { getWorksAndReturn, getCategoriesAndReturn } from "./api.js";
 import { getToken } from "../pages/ifLogged.js";
+import { fetchAndDisplayWorks } from "../pages/index.js";
 
 let originalModalTemplate = null;
+
+async function refreshAllDisplays() {
+	const allWorks = await getWorksAndReturn();
+	await fetchAndDisplayWorksInModal();
+	await fetchAndDisplayWorks(allWorks);
+}
 
 export async function showModal() {
 	const modalOnClick = document.getElementById("modifyProjects");
@@ -128,6 +135,18 @@ export async function showModal2() {
 			photoIcon.classList.add("fa-regular");
 			photoIcon.classList.add("fa-image");
 			photoIcon.classList.add("fa-6x");
+			/* preview container */
+			const previewContainer = document.createElement("div");
+			previewContainer.setAttribute("id", "preview-container");
+			const previewImage = document.createElement("img");
+			previewImage.setAttribute("id", "preview-image");
+			previewImage.setAttribute("alt", "preview image");
+			const removePreviewIcon = document.createElement("i");
+			removePreviewIcon.setAttribute("id", "remove-preview-icon");
+			removePreviewIcon.setAttribute("type", "button");
+			removePreviewIcon.classList.add("fa-regular");
+			removePreviewIcon.classList.add("fa-circle-xmark");
+			/* form label & input */
 			const inputLabel = document.createElement("label");
 			inputLabel.setAttribute("for", "add-file");
 			inputLabel.setAttribute("id", "add-file-label");
@@ -152,8 +171,19 @@ export async function showModal2() {
 			inputTitle.setAttribute("type", "text");
 			inputTitle.setAttribute("id", "input-title");
 			inputTitle.setAttribute("name", "title");
+			const dropdownContainer = document.createElement("div");
+			dropdownContainer.setAttribute("id", "dropdown-container");
 			const categoryDropdown = document.createElement("select");
 			categoryDropdown.setAttribute("id", "category-dropdown");
+			const chevronDown = document.createElement("i");
+			chevronDown.classList.add("fa-solid");
+			chevronDown.classList.add("fa-chevron-down");
+			chevronDown.setAttribute("id", "select-chevron-down");
+			const removeOptionIcon = document.createElement("i");
+			removeOptionIcon.classList.add("fa-regular");
+			removeOptionIcon.classList.add("fa-circle-xmark");
+			removeOptionIcon.setAttribute("id", "remove-option-icon");
+			removeOptionIcon.style.display = "none";
 			const defaultOption = document.createElement("option");
 			defaultOption.setAttribute("value", "default");
 			defaultOption.value = "";
@@ -176,6 +206,15 @@ export async function showModal2() {
 			} catch (error) {
 				console.error("error loading categories", error.message);
 			}
+
+			const dividerButtonContainer = document.createElement("div");
+			dividerButtonContainer.setAttribute("id", "divider-button-container");
+
+			/* divider */
+			const dividerEl = document.createElement("hr");
+			dividerEl.classList.add("divider-modal-2");
+
+			/* submit button */
 			const submitAddWork = document.createElement("button");
 			submitAddWork.setAttribute("type", "submit");
 			submitAddWork.setAttribute("id", "submit-add-work");
@@ -193,9 +232,14 @@ export async function showModal2() {
 			/* title */
 			modalDiv2.appendChild(modalTitle2);
 
+			/* preview container */
+			previewContainer.appendChild(removePreviewIcon);
+			previewContainer.appendChild(previewImage);
+
 			/* input integr new work  */
 			modalDiv2.appendChild(sectionFormAddWork);
 			sectionFormAddWork.appendChild(divAddWork);
+			sectionFormAddWork.appendChild(previewContainer);
 			divAddWork.appendChild(divPhotoIcon);
 			divPhotoIcon.appendChild(photoIcon);
 			divAddWork.appendChild(inputLabel);
@@ -203,15 +247,39 @@ export async function showModal2() {
 			divAddWork.appendChild(labelP);
 
 			/* form dropdown categories */
+
 			formAddWork.appendChild(inputTitleLabel);
 			formAddWork.appendChild(inputTitle);
-			formAddWork.appendChild(categoryLabel);
-			formAddWork.appendChild(categoryDropdown);
-			formAddWork.appendChild(submitAddWork);
+			formAddWork.appendChild(dropdownContainer);
+
+			dropdownContainer.appendChild(categoryLabel);
+			dropdownContainer.appendChild(categoryDropdown);
+			dropdownContainer.appendChild(chevronDown);
+			dropdownContainer.appendChild(removeOptionIcon);
+
+			dividerButtonContainer.appendChild(dividerEl);
+			dividerButtonContainer.appendChild(submitAddWork);
+
+			formAddWork.appendChild(dividerButtonContainer);
 			sectionAddWork.appendChild(formAddWork);
 
 			modalDiv2.appendChild(sectionAddWork);
 
+			categoryDropdown.addEventListener("change", () => {
+				if (
+					categoryDropdown.value !== "" &&
+					categoryDropdown.value !== "default"
+				) {
+					removeOptionIcon.style.display = "flex";
+				} else {
+					removeOptionIcon.style.display = "none";
+				}
+			});
+			removeOptionIcon.addEventListener("click", () => {
+				categoryDropdown.selectedIndex = 0;
+				removeOptionIcon.style.display = "none";
+			});
+			await addWork();
 			returnToModal1();
 			closeModal2();
 		} else {
@@ -226,32 +294,30 @@ export async function displaySecondModalContent() {
 
 export async function deleteWork() {
 	const works = await getWorksAndReturn();
+	const token = await getToken();
 	works.forEach((work) => {
 		const deleteIcon = document.getElementById(`icon-${work.id}`);
 		if (deleteIcon) {
-			deleteIcon.addEventListener("click", () => {
-				console.log(deleteIcon);
-
+			deleteIcon.addEventListener("click", (event) => {
+				event.preventDefault();
 				const url = `${BASE_API_URL}works/${work.id}`;
+
 				const options = {
 					method: "DELETE",
 					headers: {
 						/* prettier-ignore */
-						"Authorization": `Bearer ${tokenFound}`,
+						"Authorization": `Bearer ${token}`,
 						"Content-Type": "application/json",
 					},
 				};
 				fetch(url, options)
-					.then((response) => {
-						if (response.status === 200 || response.status === 204) {
+					.then(async (response) => {
+						if (response.ok) {
 							console.log("work deleted successfully", work.id);
-							const deletedWork = document.getElementById(`work-${work.id}`);
-							deletedWork.remove();
-							fetchAndDisplayWorksInModal();
-							fetchAndDisplayWorks();
-						} else {
-							console.log("delete not permitted - status", response.status);
-							throw new Error("delete not permitted");
+
+							await refreshAllDisplays();
+
+							console.log("delete status:", response.status);
 						}
 					})
 					.catch((error) => {
@@ -263,6 +329,199 @@ export async function deleteWork() {
 			});
 		} else {
 			console.error(`Element with ID icon-${work.id} not found`);
+		}
+	});
+}
+
+export async function addWork() {
+	const token = await getToken();
+	const addWorkImg = document.getElementById("add-file");
+	const categoryDropdown = document.getElementById("category-dropdown");
+	const formAddWorkEl = document.getElementById("form-addWork");
+	const previewContainer = document.getElementById("preview-container");
+	const divAddWork = document.getElementById("input-add-work");
+	const previewImage = document.getElementById("preview-image");
+
+	if (
+		!addWorkImg ||
+		!formAddWorkEl ||
+		!categoryDropdown ||
+		!formAddWorkEl ||
+		!previewContainer ||
+		!divAddWork ||
+		!previewImage ||
+		!token
+	) {
+		console.error("One or more elements not found");
+		console.log(
+			"addWorkImg:",
+			addWorkImg,
+			"formAddWorkEl:",
+			formAddWorkEl,
+			"categoryDropdown:",
+			categoryDropdown,
+			"previewContainer:",
+			previewContainer,
+			"divAddWork:",
+			divAddWork,
+			"previewImage:",
+			previewImage,
+			"token:",
+			token
+		);
+		return;
+	}
+
+	addWorkImg.addEventListener("change", (event) => {
+		event.preventDefault();
+		const existingImgError = document.getElementById("img-error");
+		if (existingImgError) {
+			existingImgError.remove();
+		}
+		if (addWorkImg.files && addWorkImg.files[0]) {
+			const fileType = addWorkImg.files[0].type;
+			if (
+				fileType !== "image/jpeg" &&
+				fileType !== "image/png" &&
+				fileType !== "image/jpg"
+			) {
+				console.error("Invalid file type");
+				const imgError = document.createElement("p");
+				imgError.setAttribute("id", "img-error");
+				imgError.textContent = "Veuillez sélectionner une image valide";
+				imgError.style.color = "red";
+				divAddWork.appendChild(imgError);
+				return;
+			}
+
+			const maxSize = 4 * 1024 * 1024; // 4MB
+			if (addWorkImg.files[0].size > maxSize) {
+				console.error("File size exceeds 4MB");
+				const imgError = document.createElement("p");
+				imgError.setAttribute("id", "img-error");
+				imgError.textContent =
+					"Veuillez sélectionner une image de moins de 4Mo";
+				imgError.style.color = "red";
+				divAddWork.appendChild(imgError);
+				return;
+			}
+
+			const reader = new FileReader();
+
+			reader.onload = function (e) {
+				previewImage.src = e.target.result;
+				previewContainer.style.display = "flex";
+				divAddWork.style.display = "none";
+			};
+
+			reader.readAsDataURL(addWorkImg.files[0]);
+		} else {
+			console.error("No file selected");
+			const imgError = document.createElement("p");
+			imgError.setAttribute("id", "img-error");
+			imgError.textContent = "Veuillez sélectionner une image";
+			imgError.style.color = "red";
+			divAddWork.appendChild(imgError);
+		}
+	});
+	const removePreviewIcon = document.getElementById("remove-preview-icon");
+	if (removePreviewIcon) {
+		removePreviewIcon.addEventListener("click", (event) => {
+			event.preventDefault();
+			addWorkImg.value = "";
+			previewImage.src = "";
+			previewContainer.style.display = "none";
+			divAddWork.style.display = "flex";
+		});
+	}
+
+	formAddWorkEl.addEventListener("submit", async (event) => {
+		event.preventDefault();
+
+		const existingImgError = document.getElementById("img-error");
+		const existingCategoryError = document.getElementById("category-error");
+		if (existingImgError) existingImgError.remove();
+		if (existingCategoryError) existingCategoryError.remove();
+
+		if (!addWorkImg.files || !addWorkImg.files[0]) {
+			console.error("No file selected");
+			const imgError = document.createElement("p");
+			imgError.setAttribute("id", "img-error");
+			imgError.textContent = "Veuillez sélectionner une image";
+			imgError.style.color = "red";
+			divAddWork.appendChild(imgError);
+			return;
+		}
+
+		const workTitle = document.getElementById("input-title");
+		if (workTitle === "") {
+			console.error("No category selected");
+			const workTitleError = document.createElement("p");
+			workTitleError.setAttribute("id", "work-title-error");
+			workTitleError.textContent = "Veuillez choisir un titre";
+			workTitle.appendChild(workTitleError);
+			return;
+		}
+
+		if (!categoryDropdown.value || categoryDropdown.value === "default") {
+			console.error("No category selected");
+			const categoryError = document.createElement("p");
+			categoryError.setAttribute("id", "category-error");
+			categoryError.textContent = "Veuillez sélectionner une catégorie";
+
+			categoryDropdown.insertAdjacentElement("afterend", categoryError);
+			return;
+		}
+
+		const formData = new FormData(formAddWorkEl);
+		formData.append("image", addWorkImg.files[0]);
+
+		console.log("Form data:", formData);
+		console.log("Title:", formData.get("title"));
+		console.log("Category ID:", categoryDropdown.value);
+		console.log("File:", formData.get("image"));
+
+		try {
+			const response = await fetch(`${BASE_API_URL}works/`, {
+				method: "POST",
+				headers: {
+					/* prettier-ignore */
+					"Authorization": `Bearer ${token}`,
+				},
+
+				body: formData,
+			});
+			if (!response.ok) {
+				const errorText = await response.text();
+				throw new Error(`Erreur serveur (${response.status}): ${errorText}`);
+			}
+
+			const responseData = await response.json();
+			console.log("Work added successfully:", responseData);
+
+			const successMessage = document.createElement("p");
+			successMessage.setAttribute("id", "success-message");
+			successMessage.textContent = "Photo ajoutée avec succès";
+			successMessage.style.color = "green";
+			formAddWorkEl.insertAdjacentElement("afterend", successMessage);
+			setTimeout(() => {
+				successMessage.remove();
+			}, 2000);
+			await refreshAllDisplays();
+
+			const modalAside = document.getElementById("modal-2");
+			if (modalAside) {
+				addWorkImg.value = "";
+				formAddWorkEl.reset();
+				categoryDropdown.selectedIndex = 0;
+
+				if (previewContainer && divAddWork) {
+					previewContainer.style.display = "none";
+					divAddWork.style.display = "flex";
+				}
+			}
+		} catch (error) {
+			console.error("Error adding work:", error);
 		}
 	});
 }

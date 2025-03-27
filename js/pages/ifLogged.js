@@ -7,8 +7,8 @@ const sectionAside = document.getElementById("portfolio");
 
 export async function getToken() {
 	let token = localStorage.getItem("user_token");
-	console.log("Token found:", token);
-	return !!token;
+	console.log(token);
+	return token;
 }
 
 export async function updatePage() {

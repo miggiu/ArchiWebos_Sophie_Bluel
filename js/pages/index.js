@@ -4,12 +4,11 @@ import { getToken, modifyInterface, logOut } from "./ifLogged.js";
 import {
 	showModal,
 	displayFirstModalContent,
+	displaySecondModalContent,
 	deleteWork,
 	closeModal,
-	showModal2,
 	closeModal2,
 	returnToModal1,
-	displaySecondModalContent,
 } from "../assets/modale.js";
 
 const galleryEl = document.querySelector(".gallery");
@@ -24,21 +23,29 @@ async function filterWorksByCategory(categoryId) {
 	fetchAndDisplayWorks(filteredWorks);
 }
 
-async function fetchAndDisplayWorks(filteredWorks) {
+export async function fetchAndDisplayWorks(filteredWorks) {
 	galleryEl.innerHTML = "";
 
-	for (const work of filteredWorks) {
-		const figure = document.createElement("figure");
-		figure.setAttribute("id", `work-${work.id}`);
-		const img = document.createElement("img");
-		img.src = work.imageUrl;
-		img.alt = work.title;
-		const figcaption = document.createElement("figcaption");
-		figcaption.textContent = work.title;
+	try {
+		const worksToDisplay =
+			filteredWorks && filteredWorks.length > 0
+				? filteredWorks
+				: await getWorksAndReturn();
+		for (const work of worksToDisplay) {
+			const figure = document.createElement("figure");
+			figure.setAttribute("id", `work-${work.id}`);
+			const img = document.createElement("img");
+			img.src = work.imageUrl;
+			img.alt = work.title;
+			const figcaption = document.createElement("figcaption");
+			figcaption.textContent = work.title;
 
-		figure.appendChild(img);
-		figure.appendChild(figcaption);
-		galleryEl.appendChild(figure);
+			figure.appendChild(img);
+			figure.appendChild(figcaption);
+			galleryEl.appendChild(figure);
+		}
+	} catch (error) {
+		console.error("Error fetching works:", error);
 	}
 }
 
