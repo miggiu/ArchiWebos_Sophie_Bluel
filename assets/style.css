@@ -84,12 +84,12 @@ time,
 mark,
 audio,
 video {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  font-size: 100%;
-  font: inherit;
-  vertical-align: baseline;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
 article,
@@ -103,284 +103,284 @@ hgroup,
 menu,
 nav,
 section {
-  display: block;
+	display: block;
 }
 body {
-  line-height: 1;
+	line-height: 1;
 }
 ol,
 ul {
-  list-style: none;
+	list-style: none;
 }
 blockquote,
 q {
-  quotes: none;
+	quotes: none;
 }
 blockquote:before,
 blockquote:after,
 q:before,
 q:after {
-  content: "";
-  content: none;
+	content: "";
+	content: none;
 }
 table {
-  border-collapse: collapse;
-  border-spacing: 0;
+	border-collapse: collapse;
+	border-spacing: 0;
 }
 /** end reset css**/
 body {
-  max-width: 1140px;
-  margin: auto;
-  font-family: "Work Sans";
-  font-size: 14px;
-  overflow-x: hidden;
+	max-width: 1140px;
+	margin: auto;
+	font-family: "Work Sans";
+	font-size: 14px;
+	overflow-x: hidden;
 }
 header {
-  display: flex;
-  justify-content: space-between;
-  margin: 50px 0;
+	display: flex;
+	justify-content: space-between;
+	margin: 50px 0;
 }
 section {
-  margin: 50px 0;
+	margin: 50px 0;
 }
 
 h1 {
-  display: flex;
-  flex-direction: column;
-  font-family: "Syne";
-  font-size: 22px;
-  font-weight: 800;
-  color: #b1663c;
+	display: flex;
+	flex-direction: column;
+	font-family: "Syne";
+	font-size: 22px;
+	font-weight: 800;
+	color: #b1663c;
 }
 
 h1 > span {
-  font-family: "Work Sans";
-  font-size: 10px;
-  letter-spacing: 0.1em;
+	font-family: "Work Sans";
+	font-size: 10px;
+	letter-spacing: 0.1em;
 }
 
 h2 {
-  font-family: "Syne";
-  font-weight: 700;
-  font-size: 30px;
-  color: #1d6154;
+	font-family: "Syne";
+	font-weight: 700;
+	font-size: 30px;
+	color: #1d6154;
 }
 nav ul {
-  display: flex;
-  align-items: center;
-  list-style-type: none;
+	display: flex;
+	align-items: center;
+	list-style-type: none;
 }
 nav li {
-  padding: 0 10px;
-  font-size: 1.2em;
+	padding: 0 10px;
+	font-size: 1.2em;
 }
 
 h1 a {
-  text-decoration: none;
-  color: #b1663c;
+	text-decoration: none;
+	color: #b1663c;
 }
 
 li a {
-  text-decoration: none;
-  color: black;
+	text-decoration: none;
+	color: black;
 }
 
 #logout {
-  cursor: pointer;
+	cursor: pointer;
 }
 /* li:hover {
 	color: #b1663c;
 } */
 
 .current {
-  font-weight: bold;
+	font-weight: bold;
 }
 
 .logged-banner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: black;
-  color: black;
-  width: 1440px;
-  height: 50px;
-  margin-left: -150px;
-  margin-right: -150px;
-  margin-top: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: black;
+	color: black;
+	width: 1440px;
+	height: 50px;
+	margin-left: -150px;
+	margin-right: -150px;
+	margin-top: 0;
 }
 
 #loggedBanner p {
-  color: white;
-  display: flex;
-  font-family: "Work Sans";
-  font-weight: 400;
-  font-size: 16px;
+	color: white;
+	display: flex;
+	font-family: "Work Sans";
+	font-weight: 400;
+	font-size: 16px;
 }
 
 #loggedBanner p i {
-  color: white;
-  padding-right: 12px;
+	color: white;
+	padding-right: 12px;
 }
 
 #introduction {
-  display: flex;
-  align-items: center;
+	display: flex;
+	align-items: center;
 }
 #introduction figure {
-  flex: 1;
+	flex: 1;
 }
 #introduction img {
-  display: block;
-  margin: auto;
-  width: 80%;
+	display: block;
+	margin: auto;
+	width: 80%;
 }
 
 #introduction article {
-  flex: 1;
+	flex: 1;
 }
 #introduction h2 {
-  margin-bottom: 1em;
+	margin-bottom: 1em;
 }
 
 #introduction p {
-  margin-bottom: 0.5em;
+	margin-bottom: 0.5em;
 }
 #portfolio h2 {
-  text-align: center;
-  margin-bottom: 1em;
-  margin-top: 140px;
-  display: flex;
-  justify-content: center;
+	text-align: center;
+	margin-bottom: 1em;
+	margin-top: 140px;
+	display: flex;
+	justify-content: center;
 }
 
 #projets button {
-  font-family: "Work Sans";
-  font-weight: 400;
-  font-size: 14px;
-  color: black;
-  align-content: center;
-  cursor: pointer;
-  border: none;
-  background-color: unset;
+	font-family: "Work Sans";
+	font-weight: 400;
+	font-size: 14px;
+	color: black;
+	align-content: center;
+	cursor: pointer;
+	border: none;
+	background-color: unset;
 }
 
 #modifyProjects i {
-  margin: 0 10px 0 30px;
+	margin: 0 10px 0 30px;
 }
 
 .filters {
-  display: flex;
-  justify-content: center;
+	display: flex;
+	justify-content: center;
 }
 .filters button {
-  font-family: "Syne";
-  font-weight: 700;
-  color: #1d6154;
-  border: #1d6154 solid 1px;
-  border-radius: 60px;
-  margin: 0 5px 0 5px;
-  padding: 10px 15px 10px 15px;
+	font-family: "Syne";
+	font-weight: 700;
+	color: #1d6154;
+	border: #1d6154 solid 1px;
+	border-radius: 60px;
+	margin: 0 5px 0 5px;
+	padding: 10px 15px 10px 15px;
 }
 
 .filters button:hover {
-  background-color: #1d6154;
-  color: white;
+	background-color: #1d6154;
+	color: white;
 }
 
 .not-displayed {
-  display: none;
+	display: none;
 }
 
 .gallery {
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-column-gap: 20px;
-  grid-row-gap: 20px;
+	width: 100%;
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-column-gap: 20px;
+	grid-row-gap: 20px;
 }
 
 .gallery img {
-  width: 100%;
+	width: 100%;
 }
 
 #contact,
 #login {
-  width: 50%;
-  margin: auto;
+	width: 50%;
+	margin: 150px auto 300px auto;
 }
 
 #contact,
 #login > * {
-  text-align: center;
+	text-align: center;
 }
 
 #login #errorMsg {
-  font-family: "Work Sans";
-  color: red;
-  font-size: 18px;
-  font-weight: bold;
-  text-decoration: none;
-  margin-bottom: 10px;
+	font-family: "Work Sans";
+	color: red;
+	font-size: 18px;
+	font-weight: bold;
+	text-decoration: none;
+	margin-bottom: 10px;
 }
 
 #login a {
-  text-align: center;
-  font-family: "Work Sans";
-  font-weight: bold;
-  text-decoration: underline;
-  font-size: 14px;
-  color: #3d3d3d;
+	text-align: center;
+	font-family: "Work Sans";
+	font-weight: bold;
+	text-decoration: underline;
+	font-size: 14px;
+	color: #3d3d3d;
 }
 
 #contact,
 #login h2 {
-  margin-bottom: 20px;
+	margin-bottom: 20px;
 }
 
 #contact form,
 #login form {
-  text-align: left;
-  margin-top: 30px;
-  display: flex;
-  flex-direction: column;
+	text-align: left;
+	margin-top: 30px;
+	display: flex;
+	flex-direction: column;
 }
 
 #contact input,
 #login input,
 #form-addWork input,
 #form-addWork select {
-  height: 50px;
-  font-size: 1.2em;
-  border: none;
-  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	height: 50px;
+	font-size: 1.2em;
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
 
 #contact label {
-  margin: 2em 0 1em 0;
+	margin: 2em 0 1em 0;
 }
 
 #login label {
-  margin: 2em 0 1em 0;
-  font-family: "Work Sans";
-  font-weight: bold;
-  font-size: 14px;
-  color: #3d3d3d;
+	margin: 2em 0 1em 0;
+	font-family: "Work Sans";
+	font-weight: bold;
+	font-size: 14px;
+	color: #3d3d3d;
 }
 
 #contact textarea {
-  border: none;
-  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
 
 #contact input[type="submit"] {
-  font-family: "Syne";
-  font-weight: 700;
-  color: white;
-  background-color: #1d6154;
-  margin: 2em auto;
-  width: 180px;
-  text-align: center;
-  border-radius: 60px;
+	font-family: "Syne";
+	font-weight: 700;
+	color: white;
+	background-color: #1d6154;
+	margin: 2em auto;
+	width: 180px;
+	text-align: center;
+	border-radius: 60px;
 }
 
 /* #login input[type="email"]{
@@ -391,423 +391,417 @@ li a {
 } */
 
 #login input[type="submit"] {
-  font-family: "Syne";
-  font-weight: 700;
-  color: white;
-  background-color: #1d6154;
-  border: 1px solid #1d6154;
-  margin: 2em auto;
-  padding: 0 40px 0 40px;
-  width: 45%;
-  text-align: center;
-  border-radius: 60px;
+	font-family: "Syne";
+	font-weight: 700;
+	color: white;
+	background-color: #1d6154;
+	border: 1px solid #1d6154;
+	margin: 2em auto;
+	padding: 0 40px 0 40px;
+	width: 45%;
+	text-align: center;
+	border-radius: 60px;
 }
 
 #login input[type="submit"]:hover {
-  background-color: #0e2f28;
-  border: 1px solid #0e2f28;
+	background-color: #0e2f28;
+	border: 1px solid #0e2f28;
 }
 
 .fa-eye {
-  display: flex;
-  justify-content: end;
-  position: relative;
-  width: 20px;
-  top: -32px;
-  left: 520px;
-  color: #1d6154;
-  opacity: 75%;
+	display: flex;
+	justify-content: end;
+	position: relative;
+	width: 20px;
+	top: -32px;
+	left: 520px;
+	color: #1d6154;
+	opacity: 75%;
 }
 
 .fa-eye:hover {
-  color: #0e2f28;
+	color: #0e2f28;
 }
 
 footer nav ul {
-  display: flex;
-  justify-content: flex-end;
-  margin: 2em;
+	display: flex;
+	justify-content: flex-end;
+	margin: 2em;
 }
-
-/* footer nav li {
-	font-family: "Work Sans";
-	font-weight: 300;
-	line-height: 16.42px;
-	font-size: 14px;
-} */
 
 /* aside modal 1 */
 
 #openModal {
-  text-decoration: none;
-  color: black;
+	text-decoration: none;
+	color: black;
 }
 
 #openModal i {
-  color: black;
+	color: black;
 }
 
 .modalTemplate {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.7);
 }
 
 .modalVisible {
-  display: flex;
+	display: flex;
 }
 
 .modalInvisible {
-  display: none;
+	display: none;
 }
 
 .modal-wrapper {
-  position: absolute;
-  width: 530px;
-  max-width: 580px;
-  height: 600px;
-  max-height: 680px;
-  background-color: white;
-  border-radius: 10px;
-  overflow: auto;
-  z-index: 1000;
-  left: 50%;
-  transform: translateX(-50%);
-  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
-  padding: 20px;
+	position: absolute;
+	width: 530px;
+	max-width: 580px;
+	height: 600px;
+	max-height: 680px;
+	background-color: white;
+	border-radius: 10px;
+	overflow: auto;
+	z-index: 1000;
+	left: 50%;
+	transform: translateX(-50%);
+	box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+	padding: 20px;
 }
 
 .close-modal-div {
-  margin: 5px 0 0 0;
-  display: flex;
-  justify-content: flex-end;
+	margin: 5px 0 0 0;
+	display: flex;
+	justify-content: flex-end;
 }
 
 #modalTitle {
-  font-family: "Work Sans";
-  font-weight: 400;
-  font-size: 26px;
-  color: black;
-  align-items: center;
-  margin: 15px 0 15px 0;
+	font-family: "Work Sans";
+	font-weight: 400;
+	font-size: 26px;
+	color: black;
+	align-items: center;
+	margin: 15px 0 15px 0;
 }
 
 #api-works {
-  display: flex;
-  margin: 0 auto;
-  flex-wrap: wrap;
-  padding: 0 40px 0 40px;
-  justify-content: flex-start;
+	height: 65%;
+	display: flex;
+	margin: 0 auto;
+	flex-wrap: wrap;
+	padding: 0 40px 0 40px;
+	justify-content: flex-start;
 }
 
 .modal-work {
-  width: calc(100% / 6);
-  display: flex;
-  flex-direction: column;
-  margin: 5px;
-  justify-content: flex-start;
+	width: calc(100% / 6);
+	display: flex;
+	flex-direction: column;
+	margin: 5px;
+	justify-content: flex-start;
 }
 
 #delete-icon-div {
-  display: flex;
-  justify-content: end;
+	display: flex;
+	justify-content: end;
 }
 
 .delete-icon {
-  width: 20px;
-  height: 20px;
-  position: relative;
-  bottom: -25px;
-  left: -5px;
+	width: 20px;
+	height: 20px;
+	position: relative;
+	bottom: -25px;
+	left: -5px;
 }
 
 #button-add-work-div {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	align-items: center;
 }
 
 .divider-modal {
-  width: 80%;
-  margin: 50px 0 30px 0;
+	width: 80%;
+	margin: 50px 0 30px 0;
 }
 
 #add-new-work {
-  font-family: "Syne";
-  font-weight: 700;
-  font-size: 14px;
-  color: white;
-  background-color: #1d6154;
-  padding: 0 40px 0 40px;
-  height: 35px;
-  text-align: center;
-  border-radius: 60px;
-  border: 1px solid #1d6154;
-  align-items: center;
-  margin: 10px 0 20px 0;
+	font-family: "Syne";
+	font-weight: 700;
+	font-size: 14px;
+	color: white;
+	background-color: #1d6154;
+	padding: 0 40px 0 40px;
+	height: 35px;
+	text-align: center;
+	border-radius: 60px;
+	border: 1px solid #1d6154;
+	align-items: center;
+	margin: 10px 0 20px 0;
 }
 
 #add-new-work:hover {
-  background-color: #0e2f28;
-  border: 1px solid #0e2f28;
+	background-color: #0e2f28;
+	border: 1px solid #0e2f28;
 }
 
 /* second modal */
 
 #modalTitleAddPhoto {
-  font-family: "Work Sans";
-  font-weight: 400;
-  font-size: 26px;
-  color: black;
-  align-items: center;
-  margin: 15px 0 30px 0;
+	font-family: "Work Sans";
+	font-weight: 400;
+	font-size: 26px;
+	color: black;
+	align-items: center;
+	margin: 15px 0 30px 0;
 }
 
 .icons-modal-div {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
 }
 
 /* preview container */
 #preview-container {
-  display: none;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  position: relative;
-  background-color: #e8f1f6;
-  border-radius: 3px;
+	display: none;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	position: relative;
+	background-color: #e8f1f6;
+	border-radius: 3px;
 }
 #remove-preview-icon {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  color: #6c6c6c;
-  width: 15px;
-  cursor: pointer;
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	color: #6c6c6c;
+	width: 15px;
+	cursor: pointer;
 }
 
 #section-form-add-work {
-  display: flex;
-  justify-content: center;
-  margin: 0 60px 5px 60px;
-  height: 30%;
-  background-color: #e8f1f6;
+	display: flex;
+	justify-content: center;
+	margin: 0 60px 5px 60px;
+	height: 30%;
+	background-color: #e8f1f6;
 }
 
 #input-add-work {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 100%;
-  border-radius: 3px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	width: 100%;
+	border-radius: 3px;
 }
 
 #preview-image {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
 }
 
 #photo-icon-div {
-  width: inherit;
-  display: flex;
-  justify-content: center;
+	width: inherit;
+	display: flex;
+	justify-content: center;
 }
 
 #photo-icon-div i {
-  color: #cbd6dc;
+	color: #cbd6dc;
 }
 
 input[type="file"] {
-  display: none;
+	display: none;
 }
 
 #add-file-label {
-  font-family: "Work Sans";
-  font-weight: 500;
-  font-size: 14px;
-  color: #306685;
-  background-color: #cbd6dc;
-  margin: 10px auto;
-  padding: 0 40px 0 40px;
-  width: 30%;
-  height: 45px;
-  border-radius: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+	font-family: "Work Sans";
+	font-weight: 500;
+	font-size: 14px;
+	color: #306685;
+	background-color: #cbd6dc;
+	margin: 10px auto;
+	padding: 0 40px 0 40px;
+	width: 30%;
+	height: 45px;
+	border-radius: 60px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 #add-file-label:hover {
-  background-color: #306685;
-  color: #cbd6dc;
+	background-color: #306685;
+	color: #cbd6dc;
 }
 
 #label-p {
-  display: flex;
-  justify-content: center;
-  color: #444444;
-  font-family: "Work Sans";
-  font-weight: 400;
-  font-size: 10px;
+	display: flex;
+	justify-content: center;
+	color: #444444;
+	font-family: "Work Sans";
+	font-weight: 400;
+	font-size: 10px;
 }
 
 #section-add-work {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 100%;
-  margin: 30px 0 0 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	width: 100%;
+	margin: 30px 0 0 0;
 }
 
 #form-addWork {
-  position: relative;
-  margin: 0 60px 0 60px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 80%;
+	position: relative;
+	margin: 0 60px 0 60px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	width: 80%;
 }
 /* #input-title-label {
 	margin-bottom: 10px;
 } */
 
 #form-addWork input[type="text"] {
-  font-family: "Work Sans";
-  font-weight: 400;
-  font-size: 14px;
-  color: #444444;
-  margin: 10px auto;
-  text-indent: 15px;
-  width: 100%;
-  height: 40px;
+	font-family: "Work Sans";
+	font-weight: 400;
+	font-size: 14px;
+	color: #444444;
+	margin: 10px auto;
+	text-indent: 15px;
+	width: 100%;
+	height: 40px;
 }
 
 #dropdown-container {
-  position: relative;
-  display: flex;
-  flex-direction: column;
+	position: relative;
+	display: flex;
+	flex-direction: column;
 }
 
 #form-addWork select {
-  font-family: "Work Sans";
-  font-weight: 400;
-  color: #444444;
-  font-size: 14px;
-  margin: 10px auto;
-  width: 100%;
-  text-indent: 15px;
-  height: 40px;
-  appearance: none;
+	font-family: "Work Sans";
+	font-weight: 400;
+	color: #444444;
+	font-size: 14px;
+	margin: 10px auto;
+	width: 100%;
+	text-indent: 15px;
+	height: 40px;
+	appearance: none;
 }
 
 #select-chevron-down {
-  position: absolute;
-  left: 380px;
-  margin: 0 10px 0 0;
-  color: #6c6c6c;
-  width: 15px;
-  pointer-events: none;
-  display: flex;
-  justify-content: flex-end;
-  top: 52px;
+	position: absolute;
+	left: 380px;
+	margin: 0 10px 0 0;
+	color: #6c6c6c;
+	width: 15px;
+	pointer-events: none;
+	display: flex;
+	justify-content: flex-end;
+	top: 52px;
 }
 
 #form-addWork select option {
-  font-family: "Work Sans";
-  font-weight: 400;
-  font-size: 14px;
-  color: #444444;
-  background-color: white;
+	font-family: "Work Sans";
+	font-weight: 400;
+	font-size: 14px;
+	color: #444444;
+	background-color: white;
 }
 
 #form-addWork select option:disabled {
-  background-color: #cccccc;
+	background-color: #cccccc;
 }
 
 #form-addWork select option:hover {
-  background-color: #e8f1f6;
+	background-color: #e8f1f6;
 }
 
 #form-addWork select option:checked {
-  background-color: #1d6154;
-  color: white;
+	background-color: #1d6154;
+	color: white;
 }
 
 #category-dropdown-label {
-  margin-top: 15px;
+	margin-top: 15px;
 }
 
 #category-error,
 #img-error,
 #work-title-error {
-  display: flex;
-  justify-content: center;
-  color: red;
-  font-family: "Work Sans";
-  font-weight: 400;
-  font-size: 10px;
-  margin: 5px 0 5px 0;
+	display: flex;
+	justify-content: center;
+	color: red;
+	font-family: "Work Sans";
+	font-weight: 400;
+	font-size: 10px;
+	margin: 5px 0 5px 0;
 }
 
 #submit-add-work {
-  font-family: "Syne";
-  font-weight: 700;
-  font-size: 14px;
-  color: white;
-  background-color: #a7a7a7;
-  border: 1px solid #a7a7a7;
-  margin: 10px auto;
-  padding: 0 40px 0 40px;
-  width: 65%;
-  height: 45px;
-  border-radius: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  outline: none;
+	font-family: "Syne";
+	font-weight: 700;
+	font-size: 14px;
+	color: white;
+	background-color: #a7a7a7;
+	border: 1px solid #a7a7a7;
+	margin: 10px auto;
+	padding: 0 40px 0 40px;
+	width: 65%;
+	height: 45px;
+	border-radius: 60px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	outline: none;
 }
 
 #submit-add-work :disabled {
-  background-color: #a7a7a7;
-  border: 1px solid #a7a7a7;
+	background-color: #a7a7a7;
+	border: 1px solid #a7a7a7;
 }
 #submit-add-work:not(:disabled) {
-  background-color: #1d6154;
-  border: 1px solid #1d6154;
+	background-color: #1d6154;
+	border: 1px solid #1d6154;
 }
 
 #divider-button-container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
 }
 
 .divider-modal-2 {
-  margin: 30px 0 20px 0;
+	margin: 30px 0 20px 0;
 }
 
 #remove-option-icon {
-  position: absolute;
-  left: 405px;
-  color: #6c6c6c;
-  width: 15px;
-  top: 52px;
-  display: none;
-  cursor: pointer;
+	position: absolute;
+	left: 405px;
+	color: #6c6c6c;
+	width: 15px;
+	top: 52px;
+	display: none;
+	cursor: pointer;
 }
 
 #success-message {
-  display: flex;
-  justify-content: center;
+	display: flex;
+	justify-content: center;
 }

@@ -45,7 +45,7 @@ export async function updatePage() {
 export async function createModalTemplate() {
 	const tokenFound = await getToken();
 	if (tokenFound) {
-		const modalAside = document.createElement("aside");
+		const modalAside = document.createElement("dialog");
 		modalAside.setAttribute("id", "modal-content");
 		modalAside.classList.add("modalTemplate");
 		modalAside.setAttribute("aria-hidden", "false");

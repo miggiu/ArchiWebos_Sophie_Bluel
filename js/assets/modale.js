@@ -3,625 +3,659 @@ import { getWorksAndReturn, getCategoriesAndReturn } from "./api.js";
 import { getToken } from "../pages/ifLogged.js";
 import { fetchAndDisplayWorks } from "../pages/index.js";
 
+export {
+	initializeModals,
+	displayFirstModalContent,
+	createSecondModalContent,
+	deleteWork,
+	refreshAllDisplays,
+	transitionFromModal2ToModal1,
+	closeModal,
+	closeModal2,
+	returnToModal1,
+};
+
 let originalModalTemplate = null;
 
-async function refreshAllDisplays() {
-  const allWorks = await getWorksAndReturn();
-  await fetchAndDisplayWorksInModal();
-  await fetchAndDisplayWorks(allWorks);
-  await deleteWork();
+function initializeModals() {
+	displayFirstModalContent();
+
+	const modalButton = document.getElementById("modifyProjects");
+	if (modalButton) {
+		modalButton.addEventListener("click", () => {
+			const modalAside = document.getElementById("modal-content");
+			if (modalAside) {
+				modalAside.classList.remove("modalInvisible");
+				modalAside.classList.add("modalVisible");
+				modalAside.setAttribute("aria-hidden", "false");
+				modalAside.setAttribute("aria-modal", "true");
+			}
+		});
+	}
+
+	deleteWork();
 }
 
-export async function showModal() {
-  const modalOnClick = document.getElementById("modifyProjects");
-  modalOnClick.addEventListener("click", () => {
-    const modalAside = document.getElementById("modal-content");
-    if (modalAside) {
-      modalAside.setAttribute("aria-hidden", "false");
-      modalAside.setAttribute("aria-modal", "true");
-      modalAside.classList.remove("modalInvisible");
-      modalAside.classList.add("modalVisible");
-    } else {
-      console.log("clicked element not found");
-    }
-  });
+async function refreshAllDisplays() {
+	const allWorks = await getWorksAndReturn();
+	await fetchAndDisplayWorksInModal();
+	await fetchAndDisplayWorks(allWorks);
+	await deleteWork();
 }
 
 async function fetchAndDisplayWorksInModal() {
-  const workSectionEl = document.getElementById("api-works");
+	const workSectionEl = document.getElementById("api-works");
 
-  if (!workSectionEl) {
-    console.error("Element with ID api-works not found");
-    return;
-  }
-  workSectionEl.innerHTML = "";
-  const works = await getWorksAndReturn();
-  for (const work of works) {
-    const figure = document.createElement("figure");
-    figure.classList.add("modal-work");
-    figure.setAttribute("id", `work-${work.id}`);
-    const img = document.createElement("img");
-    img.src = work.imageUrl;
-    img.alt = work.title;
-    const deleteIconDiv = document.createElement("div");
-    deleteIconDiv.setAttribute("id", "delete-icon-div");
-    const deleteIcon = document.createElement("img");
-    deleteIcon.setAttribute("id", `icon-${work.id}`);
-    deleteIcon.src = "assets/icons/delete.png";
-    deleteIcon.alt = "delete icon";
-    deleteIcon.classList.add("delete-icon");
+	if (!workSectionEl) {
+		console.error("Element with ID api-works not found");
+		return;
+	}
+	workSectionEl.innerHTML = "";
+	const works = await getWorksAndReturn();
+	for (const work of works) {
+		const figure = document.createElement("figure");
+		figure.classList.add("modal-work");
+		figure.setAttribute("id", `work-${work.id}`);
+		const img = document.createElement("img");
+		img.src = work.imageUrl;
+		img.alt = work.title;
+		const deleteIconDiv = document.createElement("div");
+		deleteIconDiv.setAttribute("id", "delete-icon-div");
+		const deleteIcon = document.createElement("img");
+		deleteIcon.setAttribute("id", `icon-${work.id}`);
+		deleteIcon.src = "assets/icons/delete.png";
+		deleteIcon.alt = "delete icon";
+		deleteIcon.classList.add("delete-icon");
 
-    deleteIconDiv.appendChild(deleteIcon);
-    figure.appendChild(deleteIconDiv);
-    figure.appendChild(img);
-    workSectionEl.appendChild(figure);
-  }
+		deleteIconDiv.appendChild(deleteIcon);
+		figure.appendChild(deleteIconDiv);
+		figure.appendChild(img);
+		workSectionEl.appendChild(figure);
+	}
 }
 
 async function integrateAddWorkButton() {
-  const workSectionEl = document.getElementById("api-works");
-  const buttonAddWorkDiv = document.createElement("div");
-  buttonAddWorkDiv.setAttribute("id", "button-add-work-div");
+	const workSectionEl = document.getElementById("api-works");
+	const buttonAddWorkDiv = document.createElement("div");
+	buttonAddWorkDiv.setAttribute("id", "button-add-work-div");
 
-  const buttonAddWork = document.createElement("button");
-  buttonAddWork.setAttribute("id", "add-new-work");
-  buttonAddWork.setAttribute("type", "button");
-  buttonAddWork.textContent = "Ajouter une photo";
+	const buttonAddWork = document.createElement("button");
+	buttonAddWork.setAttribute("id", "add-new-work");
+	buttonAddWork.setAttribute("type", "button");
+	buttonAddWork.textContent = "Ajouter une photo";
 
-  const dividerEl = document.createElement("hr");
-  dividerEl.classList.add("divider-modal");
+	buttonAddWork.addEventListener("click", async () => {
+		await createSecondModalContent();
+	});
 
-  buttonAddWorkDiv.appendChild(dividerEl);
-  buttonAddWorkDiv.appendChild(buttonAddWork);
-  workSectionEl.insertAdjacentElement("afterend", buttonAddWorkDiv);
+	const dividerEl = document.createElement("hr");
+	dividerEl.classList.add("divider-modal");
+
+	buttonAddWorkDiv.appendChild(dividerEl);
+	buttonAddWorkDiv.appendChild(buttonAddWork);
+	workSectionEl.insertAdjacentElement("afterend", buttonAddWorkDiv);
 }
 
-export async function displayFirstModalContent() {
-  fetchAndDisplayWorksInModal();
-  integrateAddWorkButton();
-  if (!originalModalTemplate) {
-    const modalAside = document.getElementById("modal-content");
-    if (modalAside) {
-      originalModalTemplate = modalAside.innerHTML;
-    }
-  }
+function attachModalListeners(modalId = "modal-content") {
+	const modalAside = document.getElementById(modalId);
+	if (!modalAside) return;
+
+	const closeModalButton = document.getElementById(
+		modalId === "modal-content" ? "close-mark" : "close-mark2"
+	);
+	if (closeModalButton) {
+		const newCloseButton = closeModalButton.cloneNode(true);
+		closeModalButton.parentNode.replaceChild(newCloseButton, closeModalButton);
+		newCloseButton.addEventListener("click", () => {
+			modalId === "modal-content" ? closeModal() : closeModal2();
+		});
+	}
+	modalAside.addEventListener("click", (event) => {
+		const modalWrapper = modalAside.querySelector(".js-modal-stop");
+		if (modalWrapper && !modalWrapper.contains(event.target)) {
+			modalId === "modal-content" ? closeModal() : closeModal2();
+		}
+	});
+}
+async function displayFirstModalContent() {
+	fetchAndDisplayWorksInModal();
+	integrateAddWorkButton();
+	const modalAside = document.getElementById("modal-content");
+	if (!originalModalTemplate) {
+		if (modalAside) {
+			originalModalTemplate = modalAside.innerHTML;
+		}
+	}
+	attachModalListeners("modal-content");
 }
 
-export async function showModal2() {
-  const displayModal2 = document.getElementById("add-new-work");
-  displayModal2.addEventListener("click", async () => {
-    const modalAside = document.getElementById("modal-content");
-    if (modalAside) {
-      modalAside.innerHTML = "";
-      /* base structure */
-      modalAside.setAttribute("id", "modal-2");
-      modalAside.setAttribute("aria-hidden", "false");
-      modalAside.setAttribute("aria-modal", "true");
-      modalAside.setAttribute("aria-labelledby", "modalTitleAddPhoto");
-      modalAside.setAttribute("role", "alertdialog");
-      modalAside.classList.add("modalTemplate");
-      modalAside.classList.add("modalVisible");
-      const modalDiv2 = document.createElement("div");
-      modalDiv2.classList.add("js-modal-stop");
-      modalDiv2.classList.add("modal-wrapper");
-      /* icons */
-      const divIconsModal2 = document.createElement("div");
-      divIconsModal2.classList.add("icons-modal-div");
-      const deleteIconDiv2 = document.createElement("div");
-      deleteIconDiv2.setAttribute("id", "delete-icon-div");
-      const deleteIcon2 = document.createElement("i");
-      deleteIcon2.setAttribute("id", "close-mark2");
-      deleteIcon2.classList.add("fa-solid");
-      deleteIcon2.classList.add("fa-xmark");
-      deleteIcon2.classList.add("fa-lg");
-      const returnIconDiv = document.createElement("div");
-      returnIconDiv.setAttribute("id", "return-icon-div");
-      const returnIcon = document.createElement("i");
-      returnIcon.setAttribute("id", "return-icon");
-      returnIcon.classList.add("fa-solid");
-      returnIcon.classList.add("fa-arrow-left");
-      returnIcon.classList.add("fa-lg");
-      /* title */
-      const modalTitle2 = document.createElement("h1");
-      modalTitle2.setAttribute("id", "modalTitleAddPhoto");
-      modalTitle2.textContent = "Ajout photo";
-      /* add work form */
-      const sectionFormAddWork = document.createElement("section");
-      sectionFormAddWork.setAttribute("id", "section-form-add-work");
-      const divAddWork = document.createElement("div");
-      divAddWork.setAttribute("id", "input-add-work");
-      const divPhotoIcon = document.createElement("div");
-      divPhotoIcon.setAttribute("id", "photo-icon-div");
-      const photoIcon = document.createElement("i");
-      photoIcon.classList.add("fa-regular");
-      photoIcon.classList.add("fa-image");
-      photoIcon.classList.add("fa-6x");
-      /* preview container */
-      const previewContainer = document.createElement("div");
-      previewContainer.setAttribute("id", "preview-container");
-      const previewImage = document.createElement("img");
-      previewImage.setAttribute("id", "preview-image");
-      previewImage.setAttribute("alt", "preview image");
-      const removePreviewIcon = document.createElement("i");
-      removePreviewIcon.setAttribute("id", "remove-preview-icon");
-      removePreviewIcon.setAttribute("type", "button");
-      removePreviewIcon.classList.add("fa-regular");
-      removePreviewIcon.classList.add("fa-circle-xmark");
-      /* form label & input */
-      const inputLabel = document.createElement("label");
-      inputLabel.setAttribute("for", "add-file");
-      inputLabel.setAttribute("id", "add-file-label");
-      inputLabel.textContent = "+ Ajouter photo";
-      const inputFile = document.createElement("input");
-      inputFile.setAttribute("type", "file");
-      inputFile.setAttribute("id", "add-file");
-      inputFile.setAttribute("name", "add-new-file");
-      const labelP = document.createElement("p");
-      labelP.setAttribute("id", "label-p");
-      labelP.textContent = "jpg, png : 4mo max";
-      /* dropdowns */
-      const sectionAddWork = document.createElement("section");
-      sectionAddWork.setAttribute("id", "section-add-work");
-      const formAddWork = document.createElement("form");
-      formAddWork.setAttribute("id", "form-addWork");
-      const inputTitleLabel = document.createElement("label");
-      inputTitleLabel.setAttribute("for", "input-title");
-      inputTitleLabel.setAttribute("id", "input-title-label");
-      inputTitleLabel.textContent = "Titre";
-      const inputTitle = document.createElement("input");
-      inputTitle.setAttribute("type", "text");
-      inputTitle.setAttribute("id", "input-title");
-      inputTitle.setAttribute("name", "title");
-      const dropdownContainer = document.createElement("div");
-      dropdownContainer.setAttribute("id", "dropdown-container");
-      const categoryDropdown = document.createElement("select");
-      categoryDropdown.setAttribute("id", "category-dropdown");
-      const chevronDown = document.createElement("i");
-      chevronDown.classList.add("fa-solid");
-      chevronDown.classList.add("fa-chevron-down");
-      chevronDown.setAttribute("id", "select-chevron-down");
-      const removeOptionIcon = document.createElement("i");
-      removeOptionIcon.classList.add("fa-regular");
-      removeOptionIcon.classList.add("fa-circle-xmark");
-      removeOptionIcon.setAttribute("id", "remove-option-icon");
-      removeOptionIcon.style.display = "none";
-      const defaultOption = document.createElement("option");
-      defaultOption.setAttribute("value", "default");
-      defaultOption.value = "";
-      defaultOption.selected = true;
-      defaultOption.disabled = true;
-      const categoryLabel = document.createElement("label");
-      categoryLabel.setAttribute("for", "category-dropdown");
-      categoryLabel.setAttribute("id", "category-dropdown-label");
-      categoryLabel.textContent = "Catégorie";
-      categoryDropdown.appendChild(defaultOption);
-      try {
-        const categories = await getCategoriesAndReturn();
-        categories.forEach((category) => {
-          const option = document.createElement("option");
-          option.value = category.id;
-          option.textContent = category.name;
-          categoryDropdown.appendChild(option);
-        });
-        console.log("category loaded", categories.length);
-      } catch (error) {
-        console.error("error loading categories", error.message);
-      }
+async function createSecondModalContent() {
+	const modalAside = document.getElementById("modal-content");
+	if (modalAside) {
+		modalAside.innerHTML = "";
+		/* base structure */
+		modalAside.setAttribute("id", "modal-2");
+		modalAside.setAttribute("aria-hidden", "false");
+		modalAside.setAttribute("aria-modal", "true");
+		modalAside.setAttribute("aria-labelledby", "modalTitleAddPhoto");
+		modalAside.setAttribute("role", "alertdialog");
+		modalAside.classList.add("modalTemplate");
+		modalAside.classList.add("modalVisible");
+		const modalDiv2 = document.createElement("div");
+		modalDiv2.classList.add("js-modal-stop");
+		modalDiv2.classList.add("modal-wrapper");
+		/* icons */
+		const divIconsModal2 = document.createElement("div");
+		divIconsModal2.classList.add("icons-modal-div");
+		const closeIconDiv2 = document.createElement("div");
+		closeIconDiv2.setAttribute("id", "delete-icon-div");
+		const closeIcon2 = document.createElement("i");
+		closeIcon2.setAttribute("id", "close-mark2");
+		closeIcon2.classList.add("fa-solid");
+		closeIcon2.classList.add("fa-xmark");
+		closeIcon2.classList.add("fa-lg");
 
-      const dividerButtonContainer = document.createElement("div");
-      dividerButtonContainer.setAttribute("id", "divider-button-container");
+		const returnIconDiv = document.createElement("div");
+		returnIconDiv.setAttribute("id", "return-icon-div");
+		const returnIcon = document.createElement("i");
+		returnIcon.setAttribute("id", "return-icon");
+		returnIcon.classList.add("fa-solid");
+		returnIcon.classList.add("fa-arrow-left");
+		returnIcon.classList.add("fa-lg");
+		returnIcon.addEventListener("click", () => {
+			returnToModal1();
+		});
+		/* title */
+		const modalTitle2 = document.createElement("h1");
+		modalTitle2.setAttribute("id", "modalTitleAddPhoto");
+		modalTitle2.textContent = "Ajout photo";
+		/* add work form */
+		const sectionFormAddWork = document.createElement("section");
+		sectionFormAddWork.setAttribute("id", "section-form-add-work");
+		const divAddWork = document.createElement("div");
+		divAddWork.setAttribute("id", "input-add-work");
+		const divPhotoIcon = document.createElement("div");
+		divPhotoIcon.setAttribute("id", "photo-icon-div");
+		const photoIcon = document.createElement("i");
+		photoIcon.classList.add("fa-regular");
+		photoIcon.classList.add("fa-image");
+		photoIcon.classList.add("fa-6x");
+		/* preview container */
+		const previewContainer = document.createElement("div");
+		previewContainer.setAttribute("id", "preview-container");
+		const previewImage = document.createElement("img");
+		previewImage.setAttribute("id", "preview-image");
+		previewImage.setAttribute("alt", "preview image");
+		const removePreviewIcon = document.createElement("i");
+		removePreviewIcon.setAttribute("id", "remove-preview-icon");
+		removePreviewIcon.setAttribute("type", "button");
+		removePreviewIcon.classList.add("fa-regular");
+		removePreviewIcon.classList.add("fa-circle-xmark");
+		/* form label & input */
+		const inputLabel = document.createElement("label");
+		inputLabel.setAttribute("for", "add-file");
+		inputLabel.setAttribute("id", "add-file-label");
+		inputLabel.textContent = "+ Ajouter photo";
+		const inputFile = document.createElement("input");
+		inputFile.setAttribute("type", "file");
+		inputFile.setAttribute("id", "add-file");
+		inputFile.setAttribute("name", "add-new-file");
+		const labelP = document.createElement("p");
+		labelP.setAttribute("id", "label-p");
+		labelP.textContent = "jpg, png : 4mo max";
+		/* dropdowns */
+		const sectionAddWork = document.createElement("section");
+		sectionAddWork.setAttribute("id", "section-add-work");
+		const formAddWork = document.createElement("form");
+		formAddWork.setAttribute("id", "form-addWork");
+		const inputTitleLabel = document.createElement("label");
+		inputTitleLabel.setAttribute("for", "input-title");
+		inputTitleLabel.setAttribute("id", "input-title-label");
+		inputTitleLabel.textContent = "Titre";
+		const inputTitle = document.createElement("input");
+		inputTitle.setAttribute("type", "text");
+		inputTitle.setAttribute("id", "input-title");
+		inputTitle.setAttribute("name", "title");
+		const dropdownContainer = document.createElement("div");
+		dropdownContainer.setAttribute("id", "dropdown-container");
+		const categoryDropdown = document.createElement("select");
+		categoryDropdown.setAttribute("id", "category-dropdown");
+		const chevronDown = document.createElement("i");
+		chevronDown.classList.add("fa-solid");
+		chevronDown.classList.add("fa-chevron-down");
+		chevronDown.setAttribute("id", "select-chevron-down");
+		const removeOptionIcon = document.createElement("i");
+		removeOptionIcon.classList.add("fa-regular");
+		removeOptionIcon.classList.add("fa-circle-xmark");
+		removeOptionIcon.setAttribute("id", "remove-option-icon");
+		removeOptionIcon.style.display = "none";
+		const defaultOption = document.createElement("option");
+		defaultOption.setAttribute("value", "default");
+		defaultOption.value = "";
+		defaultOption.selected = true;
+		defaultOption.disabled = true;
+		const categoryLabel = document.createElement("label");
+		categoryLabel.setAttribute("for", "category-dropdown");
+		categoryLabel.setAttribute("id", "category-dropdown-label");
+		categoryLabel.textContent = "Catégorie";
+		categoryDropdown.appendChild(defaultOption);
+		try {
+			const categories = await getCategoriesAndReturn();
+			categories.forEach((category) => {
+				const option = document.createElement("option");
+				option.value = category.id;
+				option.textContent = category.name;
+				categoryDropdown.appendChild(option);
+			});
+			console.log("category loaded", categories.length);
+		} catch (error) {
+			console.error("error loading categories", error.message);
+		}
 
-      /* divider */
-      const dividerEl = document.createElement("hr");
-      dividerEl.classList.add("divider-modal-2");
+		const dividerButtonContainer = document.createElement("div");
+		dividerButtonContainer.setAttribute("id", "divider-button-container");
 
-      /* submit button */
-      const submitAddWork = document.createElement("button");
-      submitAddWork.setAttribute("type", "submit");
-      submitAddWork.setAttribute("id", "submit-add-work");
-      submitAddWork.textContent = "Valider";
-      /* base structure */
-      modalAside.appendChild(modalDiv2);
-      modalDiv2.appendChild(divIconsModal2);
+		/* divider */
+		const dividerEl = document.createElement("hr");
+		dividerEl.classList.add("divider-modal-2");
 
-      /* icons */
-      divIconsModal2.appendChild(returnIconDiv);
-      returnIconDiv.appendChild(returnIcon);
-      divIconsModal2.appendChild(deleteIconDiv2);
-      deleteIconDiv2.appendChild(deleteIcon2);
+		/* submit button */
+		const submitAddWork = document.createElement("button");
+		submitAddWork.setAttribute("type", "submit");
+		submitAddWork.setAttribute("id", "submit-add-work");
+		submitAddWork.textContent = "Valider";
+		/* base structure */
+		modalAside.appendChild(modalDiv2);
+		modalDiv2.appendChild(divIconsModal2);
 
-      /* title */
-      modalDiv2.appendChild(modalTitle2);
+		/* icons */
+		divIconsModal2.appendChild(returnIconDiv);
+		returnIconDiv.appendChild(returnIcon);
+		divIconsModal2.appendChild(closeIconDiv2);
+		closeIconDiv2.appendChild(closeIcon2);
 
-      /* preview container */
-      previewContainer.appendChild(removePreviewIcon);
-      previewContainer.appendChild(previewImage);
+		/* title */
+		modalDiv2.appendChild(modalTitle2);
 
-      /* input integr new work  */
-      modalDiv2.appendChild(sectionFormAddWork);
-      sectionFormAddWork.appendChild(divAddWork);
-      sectionFormAddWork.appendChild(previewContainer);
-      divAddWork.appendChild(divPhotoIcon);
-      divPhotoIcon.appendChild(photoIcon);
-      divAddWork.appendChild(inputLabel);
-      inputLabel.appendChild(inputFile);
-      divAddWork.appendChild(labelP);
+		/* preview container */
+		previewContainer.appendChild(removePreviewIcon);
+		previewContainer.appendChild(previewImage);
 
-      /* form dropdown categories */
+		/* input integr new work  */
+		modalDiv2.appendChild(sectionFormAddWork);
+		sectionFormAddWork.appendChild(divAddWork);
+		sectionFormAddWork.appendChild(previewContainer);
+		divAddWork.appendChild(divPhotoIcon);
+		divPhotoIcon.appendChild(photoIcon);
+		divAddWork.appendChild(inputLabel);
+		inputLabel.appendChild(inputFile);
+		divAddWork.appendChild(labelP);
 
-      formAddWork.appendChild(inputTitleLabel);
-      formAddWork.appendChild(inputTitle);
-      formAddWork.appendChild(dropdownContainer);
+		/* form dropdown categories */
 
-      dropdownContainer.appendChild(categoryLabel);
-      dropdownContainer.appendChild(categoryDropdown);
-      dropdownContainer.appendChild(chevronDown);
-      dropdownContainer.appendChild(removeOptionIcon);
+		formAddWork.appendChild(inputTitleLabel);
+		formAddWork.appendChild(inputTitle);
+		formAddWork.appendChild(dropdownContainer);
 
-      dividerButtonContainer.appendChild(dividerEl);
-      dividerButtonContainer.appendChild(submitAddWork);
+		dropdownContainer.appendChild(categoryLabel);
+		dropdownContainer.appendChild(categoryDropdown);
+		dropdownContainer.appendChild(chevronDown);
+		dropdownContainer.appendChild(removeOptionIcon);
 
-      formAddWork.appendChild(dividerButtonContainer);
-      sectionAddWork.appendChild(formAddWork);
+		dividerButtonContainer.appendChild(dividerEl);
+		dividerButtonContainer.appendChild(submitAddWork);
 
-      modalDiv2.appendChild(sectionAddWork);
+		formAddWork.appendChild(dividerButtonContainer);
+		sectionAddWork.appendChild(formAddWork);
 
-      categoryDropdown.addEventListener("change", () => {
-        if (
-          categoryDropdown.value !== "" &&
-          categoryDropdown.value !== "default"
-        ) {
-          removeOptionIcon.style.display = "flex";
-        } else {
-          removeOptionIcon.style.display = "none";
-        }
-      });
-      removeOptionIcon.addEventListener("click", () => {
-        categoryDropdown.selectedIndex = 0;
-        removeOptionIcon.style.display = "none";
-        checkFormValidity();
-      });
-      await addWork();
-      returnToModal1();
-      closeModal2();
-    } else {
-      console.log("the clicked element was not found");
-    }
-  });
+		modalDiv2.appendChild(sectionAddWork);
+
+		categoryDropdown.addEventListener("change", () => {
+			if (
+				categoryDropdown.value !== "" &&
+				categoryDropdown.value !== "default"
+			) {
+				removeOptionIcon.style.display = "flex";
+			} else {
+				removeOptionIcon.style.display = "none";
+			}
+		});
+		removeOptionIcon.addEventListener("click", () => {
+			categoryDropdown.selectedIndex = 0;
+			removeOptionIcon.style.display = "none";
+			checkFormValidity();
+		});
+		attachModalListeners("modal-2");
+		await addWork();
+	} else {
+		console.log("the clicked element was not found");
+	}
 }
 
-export async function displaySecondModalContent() {
-  await showModal2();
-}
+async function deleteWork() {
+	const works = await getWorksAndReturn();
+	const token = await getToken();
 
-export async function deleteWork() {
-  const works = await getWorksAndReturn();
-  const token = await getToken();
+	works.forEach((work) => {
+		const deleteIcon = document.getElementById(`icon-${work.id}`);
+		if (deleteIcon) {
+			deleteIcon.addEventListener("click", async (event) => {
+				event.preventDefault();
+				const url = `${BASE_API_URL}works/${work.id}`;
 
-  works.forEach((work) => {
-    const deleteIcon = document.getElementById(`icon-${work.id}`);
-    if (deleteIcon) {
-      deleteIcon.addEventListener("click", async (event) => {
-        event.preventDefault();
-        const url = `${BASE_API_URL}works/${work.id}`;
+				try {
+					const response = await fetch(url, {
+						method: "DELETE",
+						headers: {
+							Authorization: `Bearer ${token}`,
+							"Content-Type": "application/json",
+						},
+					});
 
-        try {
-          const headers = new Headers();
-          headers.append("Authorization", `Bearer ${token}`);
-          headers.append("Content-Type", "application/json");
+					console.log("delete response:", response);
+					if (response.ok) {
+						console.log("work deleted successfully", work.id);
+						await refreshAllDisplays();
 
-          const response = await fetch(url, {
-            method: "DELETE",
-            headers: headers,
-          });
-
-          console.log("delete response:", response);
-          if (response.ok) {
-            console.log("work deleted successfully", work.id);
-            await refreshAllDisplays();
-
-            console.log("delete status:", response.status);
-          } else {
-            const errorText = await response.text();
-            throw new Error(
-              `Erreur serveur (${response.status}): ${errorText}`
-            );
-          }
-        } catch (error) {
-          console.error(
-            "there was an issue with the delete request:",
-            error.message
-          );
-        }
-      });
-    } else {
-      console.error(`Element with ID icon-${work.id} not found`);
-    }
-  });
+						console.log("delete status:", response.status);
+					} else {
+						const errorText = await response.text();
+						throw new Error(
+							`Erreur serveur (${response.status}): ${errorText}`
+						);
+					}
+				} catch (error) {
+					console.error(
+						"there was an issue with the delete request:",
+						error.message
+					);
+				}
+			});
+		} else {
+			console.error(`Element with ID icon-${work.id} not found`);
+		}
+	});
 }
 
 function formErrors() {
-  const addWorkImg = document.getElementById("add-file");
-  const workTitle = document.getElementById("input-title");
-  const categoryDropdown = document.getElementById("category-dropdown");
-  const divAddWork = document.getElementById("input-add-work");
+	const addWorkImg = document.getElementById("add-file");
+	/* 	const workTitle = document.getElementById("input-title");
+	const categoryDropdown = document.getElementById("category-dropdown"); */
+	const divAddWork = document.getElementById("input-add-work");
 
-  const existingErrors = document.querySelectorAll("[id$='-error']");
-  existingErrors.forEach((error) => error.remove());
+	const existingErrors = document.querySelectorAll("[id$='-error']");
+	existingErrors.forEach((error) => error.remove());
 
-  if (!addWorkImg.files[0] || !addWorkImg) {
-    const existingImgError = document.getElementById("img-error");
-    if (!existingImgError) {
-      const imgError = document.createElement("p");
-      imgError.setAttribute("id", "img-error");
-      imgError.textContent = "Veuillez sélectionner une image";
-      divAddWork.appendChild(imgError);
-    }
-  }
+	/* 	if (!addWorkImg.files[0] || !addWorkImg) {
+		const existingImgError = document.getElementById("img-error");
+		if (!existingImgError) {
+			const imgError = document.createElement("p");
+			imgError.setAttribute("id", "img-error");
+			imgError.textContent = "Veuillez sélectionner une image";
+			divAddWork.appendChild(imgError);
+      return false;
+		}
+	} */
 
-  if (!workTitle || workTitle.value === "") {
-    const existingWorkTitleError = document.getElementById("work-title-error");
-    if (!existingWorkTitleError) {
-      const workTitleError = document.createElement("p");
-      workTitleError.setAttribute("id", "work-title-error");
-      workTitleError.textContent = "Veuillez choisir un titre";
-      workTitle.insertAdjacentElement("afterend", workTitleError);
-    }
-  }
+	if (addWorkImg && addWorkImg.files[0] && addWorkImg.files) {
+		const fileType = addWorkImg.files[0].type;
+		if (
+			fileType !== "image/jpeg" &&
+			fileType !== "image/png" &&
+			fileType !== "image/jpg"
+		) {
+			const imgError = document.createElement("p");
+			imgError.setAttribute("id", "img-error");
+			imgError.textContent =
+				"Veuillez sélectionner une image au format jpg, jpeg ou png";
+			divAddWork.appendChild(imgError);
+			return false;
+		}
 
-  if (
-    !categoryDropdown ||
-    !categoryDropdown.value ||
-    categoryDropdown.value === "default"
-  ) {
-    const existingCategoryError = document.getElementById("category-error");
-    if (!existingCategoryError) {
-      const categoryError = document.createElement("p");
-      categoryError.setAttribute("id", "category-error");
-      categoryError.textContent = "Veuillez sélectionner une catégorie";
-      categoryDropdown.insertAdjacentElement("afterend", categoryError);
-    }
-  }
+		const maxSize = 4 * 1024 * 1024; // 4MB
+		if (addWorkImg.files[0].size > maxSize) {
+			const imgError = document.createElement("p");
+			imgError.setAttribute("id", "img-error");
+			imgError.textContent = "Veuillez sélectionner une image de moins de 4MB";
+			divAddWork.appendChild(imgError);
+			return false;
+		}
+	}
+	/* 	if (!workTitle || workTitle.value === "") {
+		const existingWorkTitleError = document.getElementById("work-title-error");
+		if (!existingWorkTitleError) {
+			const workTitleError = document.createElement("p");
+			workTitleError.setAttribute("id", "work-title-error");
+			workTitleError.textContent = "Veuillez choisir un titre";
+			workTitle.insertAdjacentElement("afterend", workTitleError);
+      return false;
+		}
+	} */
+
+	/* 	if (
+		!categoryDropdown ||
+		!categoryDropdown.value ||
+		categoryDropdown.value === "default"
+	) {
+		const existingCategoryError = document.getElementById("category-error");
+		if (!existingCategoryError) {
+			const categoryError = document.createElement("p");
+			categoryError.setAttribute("id", "category-error");
+			categoryError.textContent = "Veuillez sélectionner une catégorie";
+			categoryDropdown.insertAdjacentElement("afterend", categoryError);
+      return false;
+		} */
+	return true;
 }
 
 async function checkFormValidity() {
-  const addWorkImg = document.getElementById("add-file");
-  const workTitle = document.getElementById("input-title");
-  const categoryDropdown = document.getElementById("category-dropdown");
-  const submitWorkButton = document.getElementById("submit-add-work");
+	const addWorkImg = document.getElementById("add-file");
+	const workTitle = document.getElementById("input-title");
+	const categoryDropdown = document.getElementById("category-dropdown");
+	const submitWorkButton = document.getElementById("submit-add-work");
 
-  if (
-    !addWorkImg.files[0] ||
-    !workTitle ||
-    workTitle.value === "" ||
-    !categoryDropdown.value ||
-    categoryDropdown.value === "default"
-  ) {
-    submitWorkButton.disabled = true;
-  } else {
-    submitWorkButton.disabled = false;
-  }
-  formErrors();
+	if (
+		!addWorkImg.files[0] ||
+		!workTitle ||
+		workTitle.value === "" ||
+		!categoryDropdown.value ||
+		categoryDropdown.value === "default"
+	) {
+		submitWorkButton.disabled = true;
+	} else {
+		submitWorkButton.disabled = false;
+	}
+	formErrors();
 }
 
 export async function addWork() {
-  const token = await getToken();
-  const addWorkImg = document.getElementById("add-file");
-  const workTitle = document.getElementById("input-title");
-  const categoryDropdown = document.getElementById("category-dropdown");
-  const formAddWorkEl = document.getElementById("form-addWork");
-  const divAddWork = document.getElementById("input-add-work");
+	const token = await getToken();
+	const addWorkImg = document.getElementById("add-file");
+	const workTitle = document.getElementById("input-title");
+	const categoryDropdown = document.getElementById("category-dropdown");
+	const formAddWorkEl = document.getElementById("form-addWork");
+	const divAddWork = document.getElementById("input-add-work");
 
-  const previewContainer = document.getElementById("preview-container");
-  const previewImage = document.getElementById("preview-image");
+	const previewContainer = document.getElementById("preview-container");
+	const previewImage = document.getElementById("preview-image");
 
-  if (
-    !addWorkImg ||
-    !formAddWorkEl ||
-    !categoryDropdown ||
-    !formAddWorkEl ||
-    !previewContainer ||
-    !divAddWork ||
-    !previewImage ||
-    !token
-  ) {
-    console.error(
-      "Un ou plusieurs éléments obligatoires n'ont pas été trouvés"
-    );
-    formErrors();
-    return;
-  }
+	checkFormValidity();
 
-  checkFormValidity();
+	addWorkImg.addEventListener("change", (event) => {
+		event.preventDefault();
 
-  addWorkImg.addEventListener("change", (event) => {
-    event.preventDefault();
-    setTimeout(() => {
-      checkFormValidity();
-    }, 10);
+		if (addWorkImg.files[0] && addWorkImg.files) {
+			if (!formErrors()) {
+				return;
+			}
 
-    if (addWorkImg.files && addWorkImg.files[0]) {
-      const fileType = addWorkImg.files[0].type;
-      if (
-        fileType !== "image/jpeg" &&
-        fileType !== "image/png" &&
-        fileType !== "image/jpg"
-      ) {
-        const imgError = document.getElementById("img-error");
-        imgError.textContent = "Veuillez sélectionner une image valide";
-        divAddWork.appendChild(imgError);
-        return;
-      }
+			const imgError = document.getElementById("img-error");
+			if (imgError) {
+				imgError.remove();
+			}
 
-      const maxSize = 4 * 1024 * 1024; // 4MB
-      if (addWorkImg.files[0].size > maxSize) {
-        console.error("La taille du fichier dépasse 4MB");
-        const imgError = document.createElement("p");
-        imgError.setAttribute("id", "img-error");
-        imgError.textContent =
-          "Veuillez sélectionner une image de moins de 4Mo";
-        imgError.style.color = "red";
-        divAddWork.appendChild(imgError);
-        return;
-      }
+			const reader = new FileReader();
+			reader.onload = function (e) {
+				previewImage.src = e.target.result;
+				previewContainer.style.display = "flex";
+				divAddWork.style.display = "none";
+			};
 
-      const reader = new FileReader();
+			reader.readAsDataURL(addWorkImg.files[0]);
+		} else {
+			formErrors();
+		}
+		setTimeout(() => {
+			checkFormValidity();
+		}, 100);
+	});
 
-      reader.onload = function (e) {
-        previewImage.src = e.target.result;
-        previewContainer.style.display = "flex";
-        divAddWork.style.display = "none";
-      };
+	const removePreviewIcon = document.getElementById("remove-preview-icon");
+	if (removePreviewIcon) {
+		removePreviewIcon.addEventListener("click", (event) => {
+			event.preventDefault();
+			addWorkImg.value = "";
+			previewImage.src = "";
+			previewContainer.style.display = "none";
+			divAddWork.style.display = "flex";
+			checkFormValidity();
+		});
+	}
 
-      reader.readAsDataURL(addWorkImg.files[0]);
-    } else {
-      formErrors();
-    }
-  });
+	workTitle.addEventListener("input", () => {
+		checkFormValidity();
+	});
 
-  const removePreviewIcon = document.getElementById("remove-preview-icon");
-  if (removePreviewIcon) {
-    removePreviewIcon.addEventListener("click", (event) => {
-      event.preventDefault();
-      addWorkImg.value = "";
-      previewImage.src = "";
-      previewContainer.style.display = "none";
-      divAddWork.style.display = "flex";
-      checkFormValidity();
-    });
-  }
+	categoryDropdown.addEventListener("change", () => {
+		checkFormValidity();
+	});
 
-  workTitle.addEventListener("input", () => {
-    checkFormValidity();
-  });
+	let isSubmitting = false;
+	formAddWorkEl.addEventListener("submit", async (event) => {
+		event.preventDefault();
 
-  categoryDropdown.addEventListener("change", () => {
-    checkFormValidity();
-  });
+		const formData = new FormData();
+		formData.append("image", addWorkImg.files[0]);
+		formData.append("title", workTitle.value);
+		formData.append("category", categoryDropdown.value);
 
-  formAddWorkEl.addEventListener("submit", async (event) => {
-    event.preventDefault();
+		console.log("Form data contains:");
+		for (const [key, value] of formData.entries()) {
+			console.log(`${key}: ${value instanceof File ? value.name : value}`);
+		}
 
-    const formData = new FormData();
-    formData.append("image", addWorkImg.files[0]);
-    formData.append("title", workTitle.value);
-    formData.append("category", categoryDropdown.value);
+		if (isSubmitting) return;
+		isSubmitting = true;
 
-    console.log("Form data contains:");
-    for (const [key, value] of formData.entries()) {
-      console.log(`${key}: ${value instanceof File ? value.name : value}`);
-    }
+		try {
+			const response = await fetch(`${BASE_API_URL}works/`, {
+				method: "POST",
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
 
-    try {
-      const response = await fetch(`${BASE_API_URL}works/`, {
-        method: "POST",
-        headers: {
-          /* prettier-ignore */
-          "Authorization": `Bearer ${token}`,
-        },
+				body: formData,
+			});
+			if (!response.ok) {
+				const errorText = await response.text();
+				throw new Error(`Erreur serveur (${response.status}): ${errorText}`);
+			}
 
-        body: formData,
-      });
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Erreur serveur (${response.status}): ${errorText}`);
-      }
+			const responseData = await response.json();
+			console.log("Work added successfully:", responseData);
 
-      const responseData = await response.json();
-      console.log("Work added successfully:", responseData);
+			const successMessage = document.createElement("p");
+			successMessage.setAttribute("id", "success-message");
+			successMessage.textContent = "Projet ajouté avec succès";
+			successMessage.style.color = "green";
+			formAddWorkEl.insertAdjacentElement("afterend", successMessage);
+			setTimeout(() => {
+				successMessage.remove();
+			}, 2000);
+			await refreshAllDisplays();
 
-      const successMessage = document.createElement("p");
-      successMessage.setAttribute("id", "success-message");
-      successMessage.textContent = "Projet ajouté avec succès";
-      successMessage.style.color = "green";
-      formAddWorkEl.insertAdjacentElement("afterend", successMessage);
-      setTimeout(() => {
-        successMessage.remove();
-      }, 2000);
-      await refreshAllDisplays();
+			const modalAside = document.getElementById("modal-2");
+			const clearCategoryButton = document.getElementById("remove-option-icon");
+			if (modalAside) {
+				addWorkImg.value = "";
+				formAddWorkEl.reset();
+				categoryDropdown.selectedIndex = 0;
+				clearCategoryButton.style.display = "none";
 
-      const modalAside = document.getElementById("modal-2");
-      const clearCategoryButton = document.getElementById("remove-option-icon");
-      if (modalAside) {
-        addWorkImg.value = "";
-        formAddWorkEl.reset();
-        categoryDropdown.selectedIndex = 0;
-        clearCategoryButton.style.display = "none";
+				const existingErrors = document.querySelectorAll("[id$='-error']");
+				existingErrors.forEach((error) => error.remove());
 
-        if (previewContainer && divAddWork) {
-          previewContainer.style.display = "none";
-          divAddWork.style.display = "flex";
-        }
-      }
-    } catch (error) {
-      console.error("Error adding work:", error);
-    }
-  });
+				if (previewContainer && divAddWork) {
+					previewContainer.style.display = "none";
+					divAddWork.style.display = "flex";
+				}
+			}
+		} catch (error) {
+			console.error("Error adding work:", error);
+		}
+	});
 }
 
-export async function closeModal() {
-  const closeModalButton = document.getElementById("close-mark");
-  if (closeModalButton) {
-    closeModalButton.addEventListener("click", () => {
-      const modalAside = document.getElementById("modal-content");
-      if (modalAside) {
-        modalAside.classList.remove("modalVisible");
-        modalAside.classList.add("modalInvisible");
-        modalAside.setAttribute("aria-hidden", "true");
-        modalAside.setAttribute("aria-modal", "false");
-      }
-    });
-  }
+function hideModal(modalId = "modal-content") {
+	const modalAside = document.getElementById(modalId);
+	if (modalAside) {
+		if (!modalAside.classList.contains("modalInvisible")) {
+			modalAside.classList.remove("modalVisible");
+			modalAside.classList.add("modalInvisible");
+			modalAside.setAttribute("aria-hidden", "true");
+			modalAside.setAttribute("aria-modal", "false");
+		}
+	}
 }
 
-export async function returnToModal1() {
-  const returnIcon = document.getElementById("return-icon");
-  if (returnIcon) {
-    returnIcon.addEventListener("click", async () => {
-      const modalAside = document.getElementById("modal-2");
-      if (modalAside) {
-        modalAside.setAttribute("id", "modal-content");
-        if (originalModalTemplate) {
-          modalAside.innerHTML = originalModalTemplate;
-          await fetchAndDisplayWorksInModal();
-          await deleteWork();
-        } else {
-          modalAside.innerHTML = "";
-          await displayFirstModalContent();
-        }
-        closeModal();
-        showModal2();
-      } else {
-        console.log("error on returning to modal 1");
-      }
-    });
-  }
+async function transitionFromModal2ToModal1(shouldHideModal) {
+	const modalAside = document.getElementById("modal-2");
+	if (modalAside) {
+		if (shouldHideModal) {
+			hideModal("modal-2");
+		}
+		modalAside.setAttribute("id", "modal-content");
+
+		if (originalModalTemplate) {
+			modalAside.innerHTML = originalModalTemplate;
+			await fetchAndDisplayWorksInModal();
+			await integrateAddWorkButton();
+			await deleteWork();
+			attachModalListeners("modal-content");
+		} else {
+			modalAside.innerHTML = "";
+			displayFirstModalContent();
+		}
+		if (!shouldHideModal) {
+			const modal = document.getElementById("modal-content");
+			if (modal) {
+				modal.classList.remove("modalInvisible");
+				modal.classList.add("modalVisible");
+				modal.setAttribute("aria-hidden", "false");
+				modal.setAttribute("aria-modal", "true");
+			}
+		}
+	}
 }
 
-export async function closeModal2() {
-  const closeModalButton2 = document.getElementById("close-mark2");
-  if (closeModalButton2) {
-    closeModalButton2.addEventListener("click", async () => {
-      const modalAside = document.getElementById("modal-2");
-      if (modalAside) {
-        modalAside.setAttribute("id", "modal-content");
-        if (originalModalTemplate) {
-          modalAside.innerHTML = originalModalTemplate;
-          fetchAndDisplayWorksInModal();
-          deleteWork();
-        } else {
-          modalAside.innerHTML = "";
-          displayFirstModalContent();
-        }
-        modalAside.classList.remove("modalVisible");
-        modalAside.classList.add("modalInvisible");
-        modalAside.setAttribute("aria-hidden", "true");
-        modalAside.setAttribute("aria-modal", "false");
+async function returnToModal1() {
+	await transitionFromModal2ToModal1(false);
+}
 
-        /* reattach event listeners on modal 1 */
-        await closeModal();
-        await showModal2();
-      }
-    });
-  }
+async function closeModal() {
+	const modalAside = document.getElementById("modal-content");
+	if (modalAside) {
+		hideModal("modal-content");
+		setTimeout(() => {
+			if (originalModalTemplate && !modalAside.innerHTML) {
+				modalAside.innerHTML = originalModalTemplate;
+				fetchAndDisplayWorksInModal();
+				deleteWork();
+			}
+		}, 300);
+	}
+}
+
+async function closeModal2() {
+	await transitionFromModal2ToModal1(true);
 }
