@@ -7,7 +7,6 @@ export {
 	initializeModals,
 	displayFirstModalContent,
 	createSecondModalContent,
-	deleteWork,
 	refreshAllDisplays,
 	transitionFromModal2ToModal1,
 	closeModal,
@@ -32,15 +31,14 @@ function initializeModals() {
 			}
 		});
 	}
-
-	deleteWork();
+	attachModalListeners("modal-content");
 }
 
 async function refreshAllDisplays() {
 	const allWorks = await getWorksAndReturn();
 	await fetchAndDisplayWorksInModal();
 	await fetchAndDisplayWorks(allWorks);
-	await deleteWork();
+	attachModalListeners();
 }
 
 async function fetchAndDisplayWorksInModal() {
@@ -84,10 +82,6 @@ async function integrateAddWorkButton() {
 	buttonAddWork.setAttribute("type", "button");
 	buttonAddWork.textContent = "Ajouter une photo";
 
-	buttonAddWork.addEventListener("click", async () => {
-		await createSecondModalContent();
-	});
-
 	const dividerEl = document.createElement("hr");
 	dividerEl.classList.add("divider-modal");
 
@@ -99,6 +93,18 @@ async function integrateAddWorkButton() {
 function attachModalListeners(modalId = "modal-content") {
 	const modalAside = document.getElementById(modalId);
 	if (!modalAside) return;
+
+	if (modalId === "modal-content") {
+		const addNewWorkButton = document.getElementById("add-new-work");
+		if (addNewWorkButton) {
+			const newAddButton = addNewWorkButton.cloneNode(true);
+			addNewWorkButton.parentNode.replaceChild(newAddButton, addNewWorkButton);
+			newAddButton.addEventListener("click", async () => {
+				await createSecondModalContent();
+			});
+		}
+		attachDeleteListeners();
+	}
 
 	const closeModalButton = document.getElementById(
 		modalId === "modal-content" ? "close-mark" : "close-mark2"
@@ -117,6 +123,23 @@ function attachModalListeners(modalId = "modal-content") {
 		}
 	});
 }
+
+async function attachDeleteListeners() {
+	const works = await getWorksAndReturn();
+	works.forEach((work) => {
+		const deleteIcon = document.getElementById(`icon-${work.id}`);
+		if (deleteIcon) {
+			const newDeleteIcon = deleteIcon.cloneNode(true);
+			deleteIcon.parentNode.replaceChild(newDeleteIcon, deleteIcon);
+			newDeleteIcon.addEventListener("click", async () => {
+				if (confirm(`Êtes-vous sûr de vouloir supprimer ${work.title} ?`)) {
+					await deleteWorkById(work.id);
+				}
+			});
+		}
+	});
+}
+
 async function displayFirstModalContent() {
 	fetchAndDisplayWorksInModal();
 	integrateAddWorkButton();
@@ -332,70 +355,40 @@ async function createSecondModalContent() {
 	}
 }
 
-async function deleteWork() {
-	const works = await getWorksAndReturn();
+async function deleteWorkById(workId) {
 	const token = await getToken();
+	const url = `${BASE_API_URL}works/${workId}`;
 
-	works.forEach((work) => {
-		const deleteIcon = document.getElementById(`icon-${work.id}`);
-		if (deleteIcon) {
-			deleteIcon.addEventListener("click", async (event) => {
-				event.preventDefault();
-				const url = `${BASE_API_URL}works/${work.id}`;
+	try {
+		const response = await fetch(url, {
+			method: "DELETE",
+			headers: {
+				Authorization: `Bearer ${token}`,
+				"Content-Type": "application/json",
+			},
+		});
 
-				try {
-					const response = await fetch(url, {
-						method: "DELETE",
-						headers: {
-							Authorization: `Bearer ${token}`,
-							"Content-Type": "application/json",
-						},
-					});
+		console.log("delete response:", response);
+		if (response.ok) {
+			console.log("work deleted successfully", workId);
+			await refreshAllDisplays();
 
-					console.log("delete response:", response);
-					if (response.ok) {
-						console.log("work deleted successfully", work.id);
-						await refreshAllDisplays();
-
-						console.log("delete status:", response.status);
-					} else {
-						const errorText = await response.text();
-						throw new Error(
-							`Erreur serveur (${response.status}): ${errorText}`
-						);
-					}
-				} catch (error) {
-					console.error(
-						"there was an issue with the delete request:",
-						error.message
-					);
-				}
-			});
+			console.log("delete status:", response.status);
 		} else {
-			console.error(`Element with ID icon-${work.id} not found`);
+			const errorText = await response.text();
+			throw new Error(`Erreur serveur (${response.status}): ${errorText}`);
 		}
-	});
+	} catch (error) {
+		console.error("there was an issue with the delete request:", error.message);
+	}
 }
 
 function formErrors() {
 	const addWorkImg = document.getElementById("add-file");
-	/* 	const workTitle = document.getElementById("input-title");
-	const categoryDropdown = document.getElementById("category-dropdown"); */
 	const divAddWork = document.getElementById("input-add-work");
 
 	const existingErrors = document.querySelectorAll("[id$='-error']");
 	existingErrors.forEach((error) => error.remove());
-
-	/* 	if (!addWorkImg.files[0] || !addWorkImg) {
-		const existingImgError = document.getElementById("img-error");
-		if (!existingImgError) {
-			const imgError = document.createElement("p");
-			imgError.setAttribute("id", "img-error");
-			imgError.textContent = "Veuillez sélectionner une image";
-			divAddWork.appendChild(imgError);
-      return false;
-		}
-	} */
 
 	if (addWorkImg && addWorkImg.files[0] && addWorkImg.files) {
 		const fileType = addWorkImg.files[0].type;
@@ -421,30 +414,6 @@ function formErrors() {
 			return false;
 		}
 	}
-	/* 	if (!workTitle || workTitle.value === "") {
-		const existingWorkTitleError = document.getElementById("work-title-error");
-		if (!existingWorkTitleError) {
-			const workTitleError = document.createElement("p");
-			workTitleError.setAttribute("id", "work-title-error");
-			workTitleError.textContent = "Veuillez choisir un titre";
-			workTitle.insertAdjacentElement("afterend", workTitleError);
-      return false;
-		}
-	} */
-
-	/* 	if (
-		!categoryDropdown ||
-		!categoryDropdown.value ||
-		categoryDropdown.value === "default"
-	) {
-		const existingCategoryError = document.getElementById("category-error");
-		if (!existingCategoryError) {
-			const categoryError = document.createElement("p");
-			categoryError.setAttribute("id", "category-error");
-			categoryError.textContent = "Veuillez sélectionner une catégorie";
-			categoryDropdown.insertAdjacentElement("afterend", categoryError);
-      return false;
-		} */
 	return true;
 }
 
@@ -619,8 +588,6 @@ async function transitionFromModal2ToModal1(shouldHideModal) {
 		if (originalModalTemplate) {
 			modalAside.innerHTML = originalModalTemplate;
 			await fetchAndDisplayWorksInModal();
-			await integrateAddWorkButton();
-			await deleteWork();
 			attachModalListeners("modal-content");
 		} else {
 			modalAside.innerHTML = "";
@@ -650,7 +617,7 @@ async function closeModal() {
 			if (originalModalTemplate && !modalAside.innerHTML) {
 				modalAside.innerHTML = originalModalTemplate;
 				fetchAndDisplayWorksInModal();
-				deleteWork();
+				attachModalListeners();
 			}
 		}, 300);
 	}
