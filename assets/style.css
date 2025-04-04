@@ -383,12 +383,13 @@ li a {
 	border-radius: 60px;
 }
 
-/* #login input[type="email"]{
+#login input[type="email"],
+input[name="password"] {
 	font-family: "Work Sans";
 	font-weight: 400;
 	color: #444444;
 	width: 100%;
-} */
+}
 
 #login input[type="submit"] {
 	font-family: "Syne";
