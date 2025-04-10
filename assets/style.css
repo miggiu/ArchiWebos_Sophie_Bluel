@@ -409,15 +409,21 @@ input[name="password"] {
 	border: 1px solid #0e2f28;
 }
 
-.fa-eye {
-	display: flex;
-	justify-content: end;
+.password-container {
 	position: relative;
-	width: 20px;
-	top: -32px;
-	left: 520px;
+	width: 100%;
+	margin-bottom: 0;
+	pointer-events: none;
+}
+#showPassword {
+	position: absolute;
+	right: 10px;
+	top: 50%;
+	transform: translateY(-230%);
 	color: #1d6154;
 	opacity: 75%;
+	margin-right: 5px;
+	pointer-events: auto;
 }
 
 .fa-eye:hover {
