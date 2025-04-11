@@ -9,12 +9,23 @@ const showAllEl = document.getElementById("showAll");
 
 let currentCategoryId = null;
 
+/**
+ * Filters works based on category ID and updates the gallery display.
+ * Fetches all works and applies the category filter before displaying.
+ * @param {number} categoryId - The ID of the category to filter by
+ */
 async function filterWorksByCategory(categoryId) {
 	const works = await getWorksAndReturn();
 	const filteredWorks = works.filter((work) => work.category.id === categoryId);
 	fetchAndDisplayWorks(filteredWorks);
 }
 
+/**
+ * Renders works in the gallery section of the page.
+ * Creates figure elements with images and captions for each work.
+ * @param {Array} filteredWorks - Optional array of pre-filtered works to display
+ * If not provided, fetches and displays all works
+ */
 export async function fetchAndDisplayWorks(filteredWorks) {
 	galleryEl.innerHTML = "";
 
@@ -41,6 +52,11 @@ export async function fetchAndDisplayWorks(filteredWorks) {
 	}
 }
 
+/**
+ * Fetches categories from the API and creates filter buttons.
+ * Adds event listeners to each button to enable filtering by category.
+ * Also sets up the "Show All" button functionality.
+ */
 async function fetchAndDisplayCategories() {
 	const categories = await getCategoriesAndReturn();
 
@@ -66,6 +82,11 @@ async function fetchAndDisplayCategories() {
 	}
 }
 
+/**
+ * Initializes the application by setting up the page content and functionality.
+ * Loads works, categories, checks authentication, and sets up interactive elements.
+ * Acts as the main entry point for the application's frontend functionality.
+ */
 async function init() {
 	ifCurrent();
 	const allWorks = await getWorksAndReturn();

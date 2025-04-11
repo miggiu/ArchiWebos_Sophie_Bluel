@@ -14,7 +14,10 @@ export {
 	showModal,
 };
 
-/* prepares modal 1 display */
+/*
+ * Initializes modal 1 content by fetching works, setting up the add button,
+ * and attaching necessary event listeners. Also prepares modal 2 for later use.
+ */
 async function prepareModalContent() {
 	await fetchAndDisplayWorksInModal();
 	await integrateAddWorkButton();
@@ -23,19 +26,24 @@ async function prepareModalContent() {
 	await createSecondModalContent();
 }
 
-/* modal 1 is displayed on click */
+/*
+ * Sets up the main modal system and adds click event listener to the "modify projects" button.
+ * This function serves as the entry point for the modal functionality.
+ */
 function initializeModals() {
-	prepareModalContent();
-
 	const modalButton = document.getElementById("modifyProjects");
 	if (modalButton) {
 		modalButton.addEventListener("click", async () => {
+			prepareModalContent();
 			showModal("modal-content");
 		});
 	}
 }
 
-/* refresh func if needed  */
+/*
+ * Refreshes all work displays after modifications (add/delete).
+ * Updates both the gallery on the main page and works displayed in the modal.
+ */
 async function refreshAllDisplays() {
 	const allWorks = await getWorksAndReturn();
 	await fetchAndDisplayWorksInModal();
@@ -43,12 +51,15 @@ async function refreshAllDisplays() {
 	attachModalListeners();
 }
 
-/* fetch the works to display in modal 1 */
+/*
+ * Fetches all works from the API and renders them in the modal gallery.
+ * Each work item includes a delete icon for removal functionality.
+ */
 async function fetchAndDisplayWorksInModal() {
 	const workSectionEl = document.getElementById("api-works");
 
 	if (!workSectionEl) {
-		console.error("Element with ID api-works not found");
+		console.error("Element not found");
 		return;
 	}
 	workSectionEl.innerHTML = "";
@@ -75,7 +86,10 @@ async function fetchAndDisplayWorksInModal() {
 	}
 }
 
-/* adding divider and button to modal 2  */
+/*
+ * Adds a divider and "Add Work" button to the modal.
+ * Creates the UI elements needed for transitioning to modal 2.
+ */
 async function integrateAddWorkButton() {
 	const workSectionEl = document.getElementById("api-works");
 	const buttonAddWorkDiv = document.createElement("div");
@@ -94,7 +108,11 @@ async function integrateAddWorkButton() {
 	workSectionEl.insertAdjacentElement("afterend", buttonAddWorkDiv);
 }
 
-/* attach modal listeners on icons + out of dialog */
+/*
+ * Sets up all event listeners for a specified modal.
+ * Handles close button clicks, out-of-modal clicks, and specific actions like delete or add.
+ * @param {string} modalId - The ID of the modal to attach listeners to (default: "modal-content")
+ */
 function attachModalListeners(modalId = "modal-content") {
 	const modalAside = document.getElementById(modalId);
 	if (!modalAside) return;
@@ -130,6 +148,10 @@ function attachModalListeners(modalId = "modal-content") {
 	});
 }
 
+/*
+ * Adds click event listeners to all delete icons in the modal gallery.
+ * Each listener shows a confirmation dialog and triggers the delete API call if confirmed.
+ */
 async function attachDeleteListeners() {
 	const works = await getWorksAndReturn();
 	works.forEach((work) => {
@@ -146,14 +168,17 @@ async function attachDeleteListeners() {
 	});
 }
 
-/* creating modal 2 content */
+/*
+ * Dynamically creates the content for modal 2 (add work form).
+ * Builds all form elements, preview container, and sets up category dropdown options from the API.
+ */
 async function createSecondModalContent() {
 	const modalAside = document.createElement("dialog");
 	const firstDialog = document.getElementById("modal-content");
 	/* base structure */
 	modalAside.setAttribute("id", "modal-2");
-	modalAside.setAttribute("aria-hidden", "true");
 	modalAside.setAttribute("aria-modal", "false");
+	modalAside.inert = true;
 	modalAside.setAttribute("aria-labelledby", "modalTitleAddPhoto");
 	modalAside.setAttribute("role", "alertdialog");
 	modalAside.classList.add("modalTemplate");
@@ -264,9 +289,8 @@ async function createSecondModalContent() {
 			option.textContent = category.name;
 			categoryDropdown.appendChild(option);
 		});
-		console.log("category loaded", categories.length);
 	} catch (error) {
-		console.error("error loading categories", error.message);
+		console.error("Error loading categories", error.message);
 	}
 
 	const dividerButtonContainer = document.createElement("div");
@@ -346,7 +370,10 @@ async function createSecondModalContent() {
 	await addWork();
 }
 
-/* delete works fetch func */
+/*
+ * Sends a DELETE request to the API to remove a specific work.
+ * @param {number} workId - The ID of the work to delete
+ */
 async function deleteWorkById(workId) {
 	const token = await getToken();
 	const url = `${BASE_API_URL}works/${workId}`;
@@ -360,22 +387,22 @@ async function deleteWorkById(workId) {
 			},
 		});
 
-		console.log("delete response:", response);
 		if (response.ok) {
-			console.log("work deleted successfully", workId);
 			await refreshAllDisplays();
-
-			console.log("delete status:", response.status);
 		} else {
 			const errorText = await response.text();
 			throw new Error(`Erreur serveur (${response.status}): ${errorText}`);
 		}
 	} catch (error) {
-		console.error("there was an issue with the delete request:", error.message);
+		console.error("Error deleting work:", error.message);
 	}
 }
 
-/* checking form erros and validity before fetch */
+/*
+ * Validates form inputs and displays appropriate error messages.
+ * Checks file type (jpg/png) and size (max 4MB).
+ * @returns {boolean} True if no errors found, false otherwise
+ */
 function formErrors() {
 	const addWorkImg = document.getElementById("add-file");
 	const divAddWork = document.getElementById("input-add-work");
@@ -410,6 +437,10 @@ function formErrors() {
 	return true;
 }
 
+/*
+ * Checks if all required form fields are filled correctly and enables/disables submit button accordingly.
+ * Validates image file, title, and category selection.
+ */
 async function checkFormValidity() {
 	const addWorkImg = document.getElementById("add-file");
 	const workTitle = document.getElementById("input-title");
@@ -430,7 +461,11 @@ async function checkFormValidity() {
 	formErrors();
 }
 
-/* addwork fetch */
+/*
+ * Sets up the form submission for adding a new work.
+ * Handles file preview, form validation, and API request to create a new work.
+ * Shows success/error messages and refreshes displays after successful addition.
+ */
 export async function addWork() {
 	const token = await getToken();
 	const addWorkImg = document.getElementById("add-file");
@@ -501,11 +536,6 @@ export async function addWork() {
 		formData.append("title", workTitle.value);
 		formData.append("category", categoryDropdown.value);
 
-		console.log("Form data contains:");
-		for (const [key, value] of formData.entries()) {
-			console.log(`${key}: ${value instanceof File ? value.name : value}`);
-		}
-
 		try {
 			const response = await fetch(`${BASE_API_URL}works/`, {
 				method: "POST",
@@ -519,9 +549,6 @@ export async function addWork() {
 				const errorText = await response.text();
 				throw new Error(`Erreur serveur (${response.status}): ${errorText}`);
 			}
-
-			const responseData = await response.json();
-			console.log("Work added successfully:", responseData);
 
 			const successMessage = document.createElement("p");
 			successMessage.setAttribute("id", "success-message");
@@ -540,6 +567,10 @@ export async function addWork() {
 	});
 }
 
+/*
+ * Resets the add work form to its initial state.
+ * Clears all inputs, resets dropdowns, hides preview, and removes error messages.
+ */
 function clearAddWorkForm() {
 	const secondDialog = document.getElementById("modal-2");
 	const submitWorkButton = document.getElementById("submit-add-work");
@@ -568,7 +599,9 @@ function clearAddWorkForm() {
 	}
 }
 
-/* hide/show and close func
+/*
+ * Hides a modal by adding the appropriate CSS class and updating ARIA attributes.
+ * @param {string} modalId - The ID of the modal to hide (default: "modal-content")
  */
 function hideModal(modalId = "modal-content") {
 	const modalAside = document.getElementById(modalId);
@@ -576,22 +609,30 @@ function hideModal(modalId = "modal-content") {
 		if (!modalAside.classList.contains("modalInvisible")) {
 			modalAside.classList.remove("modalVisible");
 			modalAside.classList.add("modalInvisible");
-			modalAside.setAttribute("aria-hidden", "true");
 			modalAside.setAttribute("aria-modal", "false");
+			modalAside.inert = true;
 		}
 	}
 }
 
+/*
+ * Shows a modal by removing the invisible class and updating ARIA attributes for accessibility.
+ * @param {string} modalId - The ID of the modal to show (default: "modal-content")
+ */
 function showModal(modalId = "modal-content") {
 	const modalAside = document.getElementById(modalId);
 	if (modalAside) {
 		modalAside.classList.remove("modalInvisible");
 		modalAside.classList.add("modalVisible");
-		modalAside.setAttribute("aria-hidden", "false");
 		modalAside.setAttribute("aria-modal", "true");
+		modalAside.inert = false;
 	}
 }
 
+/*
+ * Handles transition from modal 2 back to modal 1.
+ * Clears form inputs, updates modal visibility, and reattaches event listeners.
+ */
 async function returnToModal1() {
 	clearAddWorkForm();
 	hideModal("modal-2");
@@ -599,10 +640,16 @@ async function returnToModal1() {
 	attachModalListeners("modal-content");
 }
 
+/*
+ * Closes modal 1 by hiding it and updating its ARIA attributes.
+ */
 async function closeModal() {
 	hideModal("modal-content");
 }
 
+/*
+ * Closes modal 2, clears the form inputs, and updates ARIA attributes.
+ */
 async function closeModal2() {
 	clearAddWorkForm();
 	hideModal("modal-2");

@@ -6,6 +6,11 @@ const errorEl = document.getElementById("errorMsg");
 const inputPassword = document.getElementById("password");
 const passwordVisible = document.getElementById("showPassword");
 
+/**
+ * Controls the visibility of the show password icon.
+ * Shows the icon only when the password field contains text.
+ * Attaches input event listener to password field to dynamically update icon visibility.
+ */
 document.addEventListener("DOMContentLoaded", function () {
 	function checkPasswordInput() {
 		if (inputPassword.value.length > 0) {
@@ -18,13 +23,17 @@ document.addEventListener("DOMContentLoaded", function () {
 	checkPasswordInput();
 });
 
+/**
+ * Handles login form submission.
+ * Sends credentials to the API, stores authentication token in local storage,
+ * and redirects to homepage on success or displays error message on failure.
+ */
 export async function submitLogIn() {
 	connectEl.addEventListener("submit", (event) => {
 		event.preventDefault();
 
 		const formData = new FormData(connectEl);
 		const data = Object.fromEntries(formData.entries());
-		console.log(data);
 
 		fetch(`${BASE_API_URL}users/login/`, {
 			method: "POST",
@@ -35,7 +44,6 @@ export async function submitLogIn() {
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				console.log(data);
 				if (data.userId && data.token) {
 					localStorage.setItem("user_token", data.token);
 					window.location.href = HOMEPAGE;
@@ -47,6 +55,10 @@ export async function submitLogIn() {
 	});
 }
 
+/**
+ * Toggles password visibility between text and password.
+ * Used as part of the password visibility control functionality.
+ */
 function hidePassword() {
 	if (inputPassword.type === "password") {
 		inputPassword.type = "text";
@@ -56,6 +68,10 @@ function hidePassword() {
 	}
 }
 
+/**
+ * Attaches click event listener to the password visibility toggle icon.
+ * Switches between showing and hiding the password text.
+ */
 async function showPassword() {
 	passwordVisible.addEventListener("click", () => {
 		let x = document.getElementById("password");
@@ -67,6 +83,11 @@ async function showPassword() {
 	});
 }
 
+/**
+ * Initializes the login page functionality.
+ * Sets up current page indicator, login submission handler,
+ * and password visibility toggle features.
+ */
 async function init() {
 	ifCurrent();
 	submitLogIn();
