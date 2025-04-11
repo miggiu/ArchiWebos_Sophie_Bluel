@@ -413,14 +413,13 @@ function formErrors() {
 	if (addWorkImg?.files?.length > 0) {
 		const fileType = addWorkImg.files[0].type;
 		if (
-			fileType !== "image/jpeg" &&
 			fileType !== "image/png" &&
 			fileType !== "image/jpg"
 		) {
 			const imgError = document.createElement("p");
 			imgError.setAttribute("id", "img-error");
 			imgError.textContent =
-				"Veuillez sélectionner une image au format jpg, jpeg ou png";
+				"Veuillez sélectionner une image au format jpg ou png";
 			divAddWork.appendChild(imgError);
 			return false;
 		}
