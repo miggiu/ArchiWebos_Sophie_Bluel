@@ -88,7 +88,7 @@ video {
 	padding: 0;
 	border: 0;
 	font-size: 100%;
-	font: inherit;
+	font-family: inherit;
 	vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
@@ -105,9 +105,7 @@ nav,
 section {
 	display: block;
 }
-body {
-	line-height: 1;
-}
+
 ol,
 ul {
 	list-style: none;
@@ -129,9 +127,10 @@ table {
 }
 /** end reset css**/
 body {
+	line-height: 1;
 	max-width: 1140px;
 	margin: auto;
-	font-family: "Work Sans";
+	font-family: "Work Sans", sans-serif;
 	font-size: 14px;
 	overflow-x: hidden;
 }
@@ -147,20 +146,20 @@ section {
 h1 {
 	display: flex;
 	flex-direction: column;
-	font-family: "Syne";
+	font-family: "Syne", sans-serif;
 	font-size: 22px;
 	font-weight: 800;
 	color: #b1663c;
 }
 
 h1 > span {
-	font-family: "Work Sans";
+	font-family: "Work Sans", sans-serif;
 	font-size: 10px;
 	letter-spacing: 0.1em;
 }
 
 h2 {
-	font-family: "Syne";
+	font-family: "Syne", sans-serif;
 	font-weight: 700;
 	font-size: 30px;
 	color: #1d6154;
@@ -188,9 +187,6 @@ li a {
 #logout {
 	cursor: pointer;
 }
-/* li:hover {
-	color: #b1663c;
-} */
 
 .current {
 	font-weight: bold;
@@ -212,7 +208,7 @@ li a {
 #loggedBanner p {
 	color: white;
 	display: flex;
-	font-family: "Work Sans";
+	font-family: "Work Sans", sans-serif;
 	font-weight: 400;
 	font-size: 16px;
 }
@@ -254,7 +250,7 @@ li a {
 }
 
 #projets button {
-	font-family: "Work Sans";
+	font-family: "Work Sans", sans-serif;
 	font-weight: 400;
 	font-size: 14px;
 	color: black;
@@ -273,7 +269,7 @@ li a {
 	justify-content: center;
 }
 .filters button {
-	font-family: "Syne";
+	font-family: "Syne", sans-serif;
 	font-weight: 700;
 	color: #1d6154;
 	border: #1d6154 solid 1px;
@@ -315,7 +311,7 @@ li a {
 }
 
 #login #errorMsg {
-	font-family: "Work Sans";
+	font-family: "Work Sans", sans-serif;
 	color: red;
 	font-size: 18px;
 	font-weight: bold;
@@ -325,7 +321,7 @@ li a {
 
 #login a {
 	text-align: center;
-	font-family: "Work Sans";
+	font-family: "Work Sans", sans-serif;
 	font-weight: bold;
 	text-decoration: underline;
 	font-size: 14px;
@@ -361,7 +357,7 @@ li a {
 
 #login label {
 	margin: 2em 0 1em 0;
-	font-family: "Work Sans";
+	font-family: "Work Sans", sans-serif;
 	font-weight: bold;
 	font-size: 14px;
 	color: #3d3d3d;
@@ -373,7 +369,7 @@ li a {
 }
 
 #contact input[type="submit"] {
-	font-family: "Syne";
+	font-family: "Syne", sans-serif;
 	font-weight: 700;
 	color: white;
 	background-color: #1d6154;
@@ -385,14 +381,14 @@ li a {
 
 #login input[type="email"],
 input[name="password"] {
-	font-family: "Work Sans";
+	font-family: "Work Sans", sans-serif;
 	font-weight: 400;
 	color: #444444;
 	width: 100%;
 }
 
 #login input[type="submit"] {
-	font-family: "Syne";
+	font-family: "Syne", sans-serif;
 	font-weight: 700;
 	color: white;
 	background-color: #1d6154;
@@ -490,7 +486,7 @@ footer nav ul {
 }
 
 #modalTitle {
-	font-family: "Work Sans";
+	font-family: "Work Sans", sans-serif;
 	font-weight: 400;
 	font-size: 26px;
 	color: black;
@@ -541,7 +537,7 @@ footer nav ul {
 }
 
 #add-new-work {
-	font-family: "Syne";
+	font-family: "Syne", sans-serif;
 	font-weight: 700;
 	font-size: 14px;
 	color: white;
@@ -563,7 +559,7 @@ footer nav ul {
 /* second modal */
 
 #modalTitleAddPhoto {
-	font-family: "Work Sans";
+	font-family: "Work Sans", sans-serif;
 	font-weight: 400;
 	font-size: 26px;
 	color: black;
@@ -634,7 +630,7 @@ input[type="file"] {
 }
 
 #add-file-label {
-	font-family: "Work Sans";
+	font-family: "Work Sans", sans-serif;
 	font-weight: 500;
 	font-size: 14px;
 	color: #306685;
@@ -658,7 +654,7 @@ input[type="file"] {
 	display: flex;
 	justify-content: center;
 	color: #444444;
-	font-family: "Work Sans";
+	font-family: "Work Sans", sans-serif;
 	font-weight: 400;
 	font-size: 10px;
 }
@@ -679,12 +675,9 @@ input[type="file"] {
 	justify-content: center;
 	width: 80%;
 }
-/* #input-title-label {
-	margin-bottom: 10px;
-} */
 
 #form-addWork input[type="text"] {
-	font-family: "Work Sans";
+	font-family: "Work Sans", sans-serif;
 	font-weight: 400;
 	font-size: 14px;
 	color: #444444;
@@ -701,7 +694,7 @@ input[type="file"] {
 }
 
 #form-addWork select {
-	font-family: "Work Sans";
+	font-family: "Work Sans", sans-serif;
 	font-weight: 400;
 	color: #444444;
 	font-size: 14px;
@@ -725,7 +718,7 @@ input[type="file"] {
 }
 
 #form-addWork select option {
-	font-family: "Work Sans";
+	font-family: "Work Sans", sans-serif;
 	font-weight: 400;
 	font-size: 14px;
 	color: #444444;
@@ -755,14 +748,14 @@ input[type="file"] {
 	display: flex;
 	justify-content: center;
 	color: red;
-	font-family: "Work Sans";
+	font-family: "Work Sans", sans-serif;
 	font-weight: 400;
 	font-size: 10px;
 	margin: 5px 0 5px 0;
 }
 
 #submit-add-work {
-	font-family: "Syne";
+	font-family: "Syne", sans-serif;
 	font-weight: 700;
 	font-size: 14px;
 	color: white;
