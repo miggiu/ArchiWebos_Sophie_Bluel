@@ -410,7 +410,7 @@ function formErrors() {
 	const existingErrors = document.querySelectorAll("[id$='-error']");
 	existingErrors.forEach((error) => error.remove());
 
-	if (addWorkImg && addWorkImg.files[0] && addWorkImg.files) {
+	if (addWorkImg?.files?.length > 0) {
 		const fileType = addWorkImg.files[0].type;
 		if (
 			fileType !== "image/jpeg" &&
