@@ -5,7 +5,6 @@ import { fetchAndDisplayWorks } from "../pages/index.js";
 
 export {
 	initializeModals,
-	prepareModalContent,
 	createSecondModalContent,
 	refreshAllDisplays,
 	closeModal,
@@ -14,27 +13,28 @@ export {
 	showModal,
 };
 
-/*
- * Initializes modal 1 content by fetching works, setting up the add button,
- * and attaching necessary event listeners. Also prepares modal 2 for later use.
- */
-async function prepareModalContent() {
-	await fetchAndDisplayWorksInModal();
-	await integrateAddWorkButton();
-
-	attachModalListeners("modal-content");
-	await createSecondModalContent();
-}
 
 /*
- * Sets up the main modal system and adds click event listener to the "modify projects" button.
+ * Initializes the modal system by creating both modals and setting up event listeners.
+ * Creates the second modal content in advance to avoid recreation.
+ * Adds click event listener to the "modify projects" button that:
+ *   - Fetches and displays works in the modal
+ *   - Creates the "Add Work" button only if it doesn't already exist
+ *   - Attaches necessary event listeners
+ *   - Shows the first modal
  * This function serves as the entry point for the modal functionality.
  */
 function initializeModals() {
 	const modalButton = document.getElementById("modifyProjects");
 	if (modalButton) {
+		createSecondModalContent();
 		modalButton.addEventListener("click", async () => {
-			prepareModalContent();
+			const existingButton = document.getElementById("button-add-work-div");
+			await fetchAndDisplayWorksInModal();
+			if (!existingButton) {
+				await integrateAddWorkButton();
+			}
+			attachModalListeners("modal-content");
 			showModal("modal-content");
 		});
 	}
