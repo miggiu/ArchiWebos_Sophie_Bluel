@@ -1,7 +1,7 @@
 import { getWorksAndReturn, getCategoriesAndReturn } from "../assets/api.js";
 import { ifCurrent } from "./shared.js";
 import { getToken, modifyInterface, logOut } from "./ifLogged.js";
-import { initializeModals } from "../assets/modale.js";
+import { initializeModals } from "../assets/modal.js";
 
 const galleryEl = document.querySelector(".gallery");
 const filtersEl = document.querySelector(".filters");
