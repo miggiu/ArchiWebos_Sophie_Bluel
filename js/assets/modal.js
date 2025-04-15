@@ -13,7 +13,6 @@ export {
 	showModal,
 };
 
-
 /*
  * Initializes the modal system by creating both modals and setting up event listeners.
  * Creates the second modal content in advance to avoid recreation.
@@ -412,10 +411,7 @@ function formErrors() {
 
 	if (addWorkImg?.files?.length > 0) {
 		const fileType = addWorkImg.files[0].type;
-		if (
-			fileType !== "image/png" &&
-			fileType !== "image/jpg"
-		) {
+		if (fileType !== "image/png" && fileType !== "image/jpg") {
 			const imgError = document.createElement("p");
 			imgError.setAttribute("id", "img-error");
 			imgError.textContent =
@@ -599,6 +595,25 @@ function clearAddWorkForm() {
 }
 
 /*
+ * Controls page scrolling based on modal visibility.
+ * Adds the 'noscroll' class to the body when at least one modal is visible
+ * to prevent background scrolling.
+ * Removes this class when all modals are closed.
+ */
+function toggleBodyScroll() {
+	const modals = document.querySelectorAll("dialog");
+	const bodyEl = document.body;
+	const hasVisibleModal = Array.from(modals).some((modal) =>
+		modal.classList.contains("modalVisible")
+	);
+	if (hasVisibleModal) {
+		bodyEl.classList.add("noscroll");
+	} else {
+		bodyEl.classList.remove("noscroll");
+	}
+}
+
+/*
  * Hides a modal by adding the appropriate CSS class and updating ARIA attributes.
  * @param {string} modalId - The ID of the modal to hide (default: "modal-content")
  */
@@ -610,6 +625,7 @@ function hideModal(modalId = "modal-content") {
 			modalAside.classList.add("modalInvisible");
 			modalAside.setAttribute("aria-modal", "false");
 			modalAside.inert = true;
+			toggleBodyScroll();
 		}
 	}
 }
@@ -625,6 +641,7 @@ function showModal(modalId = "modal-content") {
 		modalAside.classList.add("modalVisible");
 		modalAside.setAttribute("aria-modal", "true");
 		modalAside.inert = false;
+		toggleBodyScroll();
 	}
 }
 

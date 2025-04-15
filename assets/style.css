@@ -134,6 +134,7 @@ body {
 	font-size: 14px;
 	overflow-x: hidden;
 }
+
 header {
 	display: flex;
 	justify-content: space-between;
@@ -434,6 +435,10 @@ footer nav ul {
 
 /* aside modal 1 */
 
+.noscroll {
+	overflow: hidden;
+}
+
 #openModal {
 	text-decoration: none;
 	color: black;
@@ -507,7 +512,7 @@ footer nav ul {
 	width: calc(100% / 6);
 	display: flex;
 	flex-direction: column;
-	margin: 5px;
+	margin: 3px 7.5px 3px 7.5px;
 	justify-content: flex-start;
 }
 
@@ -542,7 +547,7 @@ footer nav ul {
 	font-size: 14px;
 	color: white;
 	background-color: #1d6154;
-	padding: 0 40px 0 40px;
+	padding: 0 60px 0 60px;
 	height: 35px;
 	text-align: center;
 	border-radius: 60px;
@@ -638,7 +643,7 @@ input[type="file"] {
 	margin: 10px auto;
 	padding: 0 40px 0 40px;
 	width: 30%;
-	height: 45px;
+	height: 35px;
 	border-radius: 60px;
 	display: flex;
 	align-items: center;
@@ -762,9 +767,9 @@ input[type="file"] {
 	background-color: #a7a7a7;
 	border: 1px solid #a7a7a7;
 	margin: 10px auto;
-	padding: 0 40px 0 40px;
+	padding: 0 60px 0 60px;
 	width: 65%;
-	height: 45px;
+	height: 35px;
 	border-radius: 60px;
 	display: flex;
 	align-items: center;
