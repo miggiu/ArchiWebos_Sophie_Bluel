@@ -420,11 +420,11 @@ function formErrors() {
 			return false;
 		}
 
-		const maxSize = 4 * 1024 * 1024; // 4MB
+		const maxSize = 4 * 1024 * 1024; // 4Mo
 		if (addWorkImg.files[0].size > maxSize) {
 			const imgError = document.createElement("p");
 			imgError.setAttribute("id", "img-error");
-			imgError.textContent = "Veuillez sélectionner une image de moins de 4MB";
+			imgError.textContent = "Veuillez sélectionner une image de moins de 4mo";
 			divAddWork.appendChild(imgError);
 			return false;
 		}
